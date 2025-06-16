@@ -225,14 +225,14 @@ auto_tooltip = false
 
 [node name="RecipeLoopPopup" type="PopupPanel" parent="."]
 initial_position = 2
-size = Vector2i(400, 150)
+size = Vector2i(400, 265)
 visible = true
 
 [node name="MarginContainer" type="MarginContainer" parent="RecipeLoopPopup"]
 offset_left = 4.0
 offset_top = 4.0
 offset_right = 396.0
-offset_bottom = 142.0
+offset_bottom = 257.0
 
 [node name="Label" type="Label" parent="RecipeLoopPopup/MarginContainer"]
 custom_minimum_size = Vector2(100, 0)
