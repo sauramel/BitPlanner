@@ -1,0 +1,413 @@
+[
+  {
+    "name": "Alesi",
+    "skill": 17,
+    "tasks": [
+      {
+        "levels": [
+          1,
+          120
+        ],
+        "required_items": {
+          "1985753175": 2
+        },
+        "reward": 150,
+        "experience": 1000.0
+      },
+      {
+        "levels": [
+          1,
+          120
+        ],
+        "required_items": {
+          "1130001": 300
+        },
+        "reward": 35,
+        "experience": 1000.0
+      },
+      {
+        "levels": [
+          1,
+          120
+        ],
+        "required_items": {
+          "1100010": 30
+        },
+        "reward": 150,
+        "experience": 1000.0
+      },
+      {
+        "levels": [
+          1,
+          120
+        ],
+        "required_items": {
+          "1100007": 200
+        },
+        "reward": 150,
+        "experience": 1000.0
+      },
+      {
+        "levels": [
+          1,
+          120
+        ],
+        "required_items": {
+          "1110016": 10
+        },
+        "reward": 50,
+        "experience": 1000.0
+      }
+    ]
+  },
+  {
+    "name": "Brico",
+    "skill": 15,
+    "tasks": [
+      {
+        "levels": [
+          1,
+          120
+        ],
+        "required_items": {
+          "2400": 1
+        },
+        "reward": 250,
+        "experience": 1000.0
+      },
+      {
+        "levels": [
+          1,
+          120
+        ],
+        "required_items": {
+          "1552106905": 1
+        },
+        "reward": 250,
+        "experience": 1000.0
+      },
+      {
+        "levels": [
+          1,
+          120
+        ],
+        "required_items": {
+          "36": 10
+        },
+        "reward": 150,
+        "experience": 1000.0
+      },
+      {
+        "levels": [
+          1,
+          120
+        ],
+        "required_items": {
+          "970827760": 1
+        },
+        "reward": 250,
+        "experience": 1000.0
+      },
+      {
+        "levels": [
+          1,
+          120
+        ],
+        "required_items": {
+          "7000": 1
+        },
+        "reward": 250,
+        "experience": 1000.0
+      },
+      {
+        "levels": [
+          1,
+          120
+        ],
+        "required_items": {
+          "1030002": 10
+        },
+        "reward": 500,
+        "experience": 1000.0
+      },
+      {
+        "levels": [
+          1,
+          120
+        ],
+        "required_items": {
+          "1200": 1
+        },
+        "reward": 100,
+        "experience": 1000.0
+      }
+    ]
+  },
+  {
+    "name": "Heimlich",
+    "skill": 13,
+    "tasks": [
+      {
+        "levels": [
+          1,
+          120
+        ],
+        "required_items": {
+          "1170000": 10
+        },
+        "reward": 50,
+        "experience": 1000.0
+      },
+      {
+        "levels": [
+          1,
+          120
+        ],
+        "required_items": {
+          "1170007": 10
+        },
+        "reward": 150,
+        "experience": 1000.0
+      },
+      {
+        "levels": [
+          1,
+          120
+        ],
+        "required_items": {
+          "1170002": 10
+        },
+        "reward": 150,
+        "experience": 1000.0
+      },
+      {
+        "levels": [
+          1,
+          120
+        ],
+        "required_items": {
+          "1170001": 10
+        },
+        "reward": 50,
+        "experience": 1000.0
+      },
+      {
+        "levels": [
+          1,
+          120
+        ],
+        "required_items": {
+          "1170004": 10
+        },
+        "reward": 200,
+        "experience": 1000.0
+      }
+    ]
+  },
+  {
+    "name": "Ramparte",
+    "skill": 18,
+    "tasks": [
+      {
+        "levels": [
+          1,
+          120
+        ],
+        "required_items": {
+          "767727086": 5
+        },
+        "reward": 150,
+        "experience": 1000.0
+      },
+      {
+        "levels": [
+          1,
+          120
+        ],
+        "required_items": {
+          "225094001": 1
+        },
+        "reward": 500,
+        "experience": 1000.0
+      },
+      {
+        "levels": [
+          1,
+          5
+        ],
+        "required_items": {
+          "767727086": 1
+        },
+        "reward": 50,
+        "experience": 500.0
+      },
+      {
+        "levels": [
+          10,
+          120
+        ],
+        "required_items": {
+          "767727086": 10
+        },
+        "reward": 300,
+        "experience": 1000.0
+      },
+      {
+        "levels": [
+          10,
+          120
+        ],
+        "required_items": {
+          "828731292": 3
+        },
+        "reward": 300,
+        "experience": 1000.0
+      }
+    ]
+  },
+  {
+    "name": "Rumbagh",
+    "skill": 19,
+    "tasks": [
+      {
+        "levels": [
+          1,
+          120
+        ],
+        "required_items": {
+          "1090002": 10
+        },
+        "reward": 250,
+        "experience": 1000.0
+      },
+      {
+        "levels": [
+          1,
+          120
+        ],
+        "required_items": {
+          "1030002": 10
+        },
+        "reward": 250,
+        "experience": 1000.0
+      },
+      {
+        "levels": [
+          1,
+          120
+        ],
+        "required_items": {
+          "1050001": 10
+        },
+        "reward": 250,
+        "experience": 1000.0
+      },
+      {
+        "levels": [
+          1,
+          120
+        ],
+        "required_items": {
+          "1020003": 20
+        },
+        "reward": 100,
+        "experience": 1000.0
+      },
+      {
+        "levels": [
+          1,
+          120
+        ],
+        "required_items": {
+          "1210002": 10,
+          "1210001": 10
+        },
+        "reward": 150,
+        "experience": 1000.0
+      },
+      {
+        "levels": [
+          1,
+          120
+        ],
+        "required_items": {
+          "1070004": 10
+        },
+        "reward": 250,
+        "experience": 1000.0
+      }
+    ]
+  },
+  {
+    "name": "Svim",
+    "skill": 21,
+    "tasks": [
+      {
+        "levels": [
+          1,
+          120
+        ],
+        "required_items": {
+          "1200": 1
+        },
+        "reward": 100,
+        "experience": 1000.0
+      },
+      {
+        "levels": [
+          1,
+          120
+        ],
+        "required_items": {
+          "1210002": 20
+        },
+        "reward": 100,
+        "experience": 1000.0
+      },
+      {
+        "levels": [
+          1,
+          120
+        ],
+        "required_items": {
+          "1170006": 10
+        },
+        "reward": 50,
+        "experience": 1000.0
+      },
+      {
+        "levels": [
+          1,
+          120
+        ],
+        "required_items": {
+          "6000": 1
+        },
+        "reward": 50,
+        "experience": 1000.0
+      },
+      {
+        "levels": [
+          1,
+          120
+        ],
+        "required_items": {
+          "1110015": 10
+        },
+        "reward": 100,
+        "experience": 1000.0
+      },
+      {
+        "levels": [
+          1,
+          120
+        ],
+        "required_items": {
+          "7000": 1
+        },
+        "reward": 250,
+        "experience": 1000.0
+      }
+    ]
+  }
+]
