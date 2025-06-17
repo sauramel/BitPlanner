@@ -18,6 +18,6 @@ Statistics calculator with gathering/effort calculations is planned for the futu
 
 ### Legal notice
 
-* This application uses materials from the BitCraft Online videogame for non-commercial informational purposes. It is believed that this constitutes a "fair use" of such copyrighted materials. BitCraft Online is developed by Clockwork Labs, Inc.
+* This application uses assets from the BitCraft Online videogame for non-commercial informational purposes. It is believed that this constitutes a "fair use" of such copyrighted materials. BitCraft Online is developed by Clockwork Labs, Inc. All BitCraft Online trademarks and assets belong to their respective owners.
 * This application uses Josefin Sans font, released under terms of [Open Font License](BitPlanner/Assets/Font/LICENSE.OFL)
 * Source code of the application is available under terms of [The Unlicense](LICENSE)
