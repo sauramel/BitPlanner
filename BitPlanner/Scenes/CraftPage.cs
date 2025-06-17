@@ -249,6 +249,8 @@ public partial class CraftPage : PanelContainer, IPage
 
         if (recipeIndex < craftingItem.Recipes.Count)
         {
+            // Calculating quantity of items produced by the recipe.
+            // If the quantity is fixed and guaranteed, minOutput and maxOutput are the same.
             var recipe = craftingItem.Recipes[(int)recipeIndex];
             var minOutput = UInt32.MaxValue;
             var maxOutput = 1u;
@@ -305,6 +307,7 @@ public partial class CraftPage : PanelContainer, IPage
                 }
                 var child = treeItem.CreateChild();
                 var childMinQuantity = (uint)Math.Ceiling((double)minQuantity / maxOutput) * consumedItem.Quantity;
+                // If minOutput is 0 it means that the item is not guaranteed to craft, so we can't know maximum quantity for ingredients and it's therefore set to 0
                 var childMaxQuantity = minOutput > 0 ? (uint)Math.Ceiling((double)maxQuantity / minOutput) * consumedItem.Quantity : 0;
                 BuildTree(consumedItem.Id, child, new(shownIds), 0, childMinQuantity, childMaxQuantity);
             }
@@ -368,6 +371,7 @@ public partial class CraftPage : PanelContainer, IPage
 
             treeItem.SetTextAlignment(1, HorizontalAlignment.Right);
             var minQuantity = (uint)item.Value[0];
+            // Here maxQuantity can be -1, see GetBaseIngredients()
             var maxQuantity = item.Value[1] < 0 ? 0u : (uint)item.Value[1];
             var quantityString = GetQuantityString(minQuantity, maxQuantity);
             treeItem.SetText(1, quantityString);
@@ -424,6 +428,7 @@ public partial class CraftPage : PanelContainer, IPage
             {
                 data[id][0] = minQuantity;
             }
+            // For the sake of code simplification, here -1 means unknown maximum quantity, unlike in BuildTree() and quantity metadata where it's 0
             data[id][1] = -1;
         }
     }

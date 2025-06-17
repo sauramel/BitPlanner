@@ -3,6 +3,9 @@ using Godot;
 
 public partial class Main : Control
 {
+    /// <summary>
+    /// A minimum window content width (without scaling applied) at which the sidebar is shown unfolded
+    /// </summary>
     private const int SIDEBAR_THRESHOLD = 850;
     private Action _backButtonCallback;
     private Button _sidebarButton;
