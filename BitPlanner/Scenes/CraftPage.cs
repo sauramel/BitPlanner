@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using Godot;
 
-public partial class CraftPage : PanelContainer
+public partial class CraftPage : PanelContainer, IPage
 {
     private readonly GameData _data = GameData.Instance;
+    private Action _backButtonCallback;
     private MarginContainer _overview;
     private LineEdit _searchEntry;
     private OptionButton _tierSelection;
@@ -30,8 +31,18 @@ public partial class CraftPage : PanelContainer
     private PopupPanel _recipeLoopPopup;
     private Label _recipeLoopLabel;
 
-    public event EventHandler<Callable> BackButtonShowRequested;
-    public event Action BackButtonHideRequested;
+    public Action BackButtonCallback
+    {
+        get => _backButtonCallback;
+
+        private set
+        {
+            _backButtonCallback = value;
+            BackButtonCallbackChanged?.Invoke(this, value);
+        }
+    }
+
+    public event EventHandler<Action> BackButtonCallbackChanged;
 
     public override void _Ready()
     {
@@ -119,7 +130,7 @@ public partial class CraftPage : PanelContainer
     {
         _overview.Visible = true;
         _recipeView.Visible = false;
-        BackButtonHideRequested?.Invoke();
+        BackButtonCallback = null;
     }
 
     private void OnOverviewFilterChanged()
@@ -137,7 +148,7 @@ public partial class CraftPage : PanelContainer
     {
         _overview.Visible = false;
         _recipeView.Visible = true;
-        BackButtonShowRequested?.Invoke(this, Callable.From(ShowOverview));
+        BackButtonCallback = ShowOverview;
         var craftingItem = _data.CraftingItems[id];
 
         if (!string.IsNullOrEmpty(craftingItem.Icon))

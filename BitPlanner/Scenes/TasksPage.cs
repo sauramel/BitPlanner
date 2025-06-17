@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public partial class TasksPage : PanelContainer
+public partial class TasksPage : PanelContainer, IPage
 {
     public class CraftRequestedEventArgs : EventArgs
     {
@@ -14,6 +14,7 @@ public partial class TasksPage : PanelContainer
     private TabContainer _travelers;
     private Texture2D _coinsIcon;
     private Texture2D _craftingIcon;
+    public Action BackButtonCallback { get => null; }
 
     public event EventHandler<CraftRequestedEventArgs> CraftRequested;
 

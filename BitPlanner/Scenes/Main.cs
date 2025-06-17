@@ -1,8 +1,10 @@
+using System;
 using Godot;
 
 public partial class Main : Control
 {
     private const int SIDEBAR_THRESHOLD = 850;
+    private Action _backButtonCallback;
     private Button _sidebarButton;
     private Button _backButton;
     private Button _settingsButton;
@@ -49,13 +51,14 @@ public partial class Main : Control
             }
         };
         _craftPageButton = _sidebarContent.GetNode<Button>("MarginContainer/VBoxContainer/CraftPageButton");
-        _craftPageButton.Toggled += (toggled) => _craftPage.Visible = toggled;
+        _craftPageButton.Toggled += (toggled) => ActivatePage(_craftPage, toggled);
         _tasksPageButton = _sidebarContent.GetNode<Button>("MarginContainer/VBoxContainer/TasksPageButton");
-        _tasksPageButton.Toggled += (toggled) => _tasksPage.Visible = toggled;
+        _tasksPageButton.Toggled += (toggled) => ActivatePage(_tasksPage, toggled);
         _aboutPageButton = _sidebarContent.GetNode<Button>("MarginContainer/VBoxContainer/AboutPageButton");
-        _aboutPageButton.Toggled += (toggled) => _aboutPage.Visible = toggled;
+        _aboutPageButton.Toggled += (toggled) => ActivatePage(_aboutPage, toggled);
 
         _backButton = GetNode<Button>("VBoxContainer/PanelContainer/MarginContainer/HBoxContainer/BackButton");
+        _backButton.Pressed += () => _backButtonCallback?.Invoke();
 
         _settingsButton = GetNode<Button>("VBoxContainer/PanelContainer/MarginContainer/HBoxContainer/SettingsButton");
         _settingsPopup = GetNode<PopupPanel>("SettingsPopup");
@@ -63,15 +66,7 @@ public partial class Main : Control
         _settingsButton.Pressed += () => _settingsPopup.PopupCentered();
 
         _craftPage = GetNode<CraftPage>("VBoxContainer/HBoxContainer/Pages/CraftPage");
-        _craftPage.BackButtonHideRequested += () => _backButton.Visible = false;
-        _craftPage.BackButtonShowRequested += (_, callback) =>
-        {
-            _backButton.Visible = true;
-            if (!_backButton.IsConnected(BaseButton.SignalName.Pressed, callback))
-            {
-                _backButton.Connect(BaseButton.SignalName.Pressed, callback, (uint)ConnectFlags.OneShot);
-            }
-        };
+        _craftPage.BackButtonCallbackChanged += (_, callback) => SetBackButtonCallback(callback);
         _craftPage.Load();
         _craftPage.Visible = false;
 
@@ -137,6 +132,21 @@ public partial class Main : Control
         {
             _sidebar.AnchorRight = 0.0f;
             _sidebarPlaceholder.CustomMinimumSize = new Vector2(_sidebarContent.Size.X, 0);
+        }
+    }
+
+    private void SetBackButtonCallback(Action callback)
+    {
+        _backButtonCallback = callback;
+        _backButton.Visible = (callback != null);
+    }
+
+    private void ActivatePage(IPage page, bool activated)
+    {
+        page.Visible = activated;
+        if (activated)
+        {
+            SetBackButtonCallback(page.BackButtonCallback);
         }
     }
 

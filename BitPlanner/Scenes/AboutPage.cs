@@ -2,8 +2,10 @@ using Godot;
 using System;
 using System.Globalization;
 
-public partial class AboutPage : PanelContainer
+public partial class AboutPage : PanelContainer, IPage
 {
+    public Action BackButtonCallback { get => null; }
+
     public override void _Ready()
     {
         var appVersion = ProjectSettings.GetSetting("application/config/version");
