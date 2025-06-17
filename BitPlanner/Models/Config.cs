@@ -2,16 +2,18 @@ using Godot;
 
 public static class Config
 {
+    private const string CONFIG_PATH = "user://config.ini";
+    private const int DEFAULT_WINDOW_WIDTH = 640;
+    private const int DEFAULT_WINDOW_HEIGHT = 720;
     private static ConfigFile _configFile;
-    private const string _configPath = "user://config.ini";
 
     public static Vector2I WindowSize
     {
         get
         {
             Load();
-            var width = _configFile.GetValue("Window", "Width", 0).AsInt32();
-            var height = _configFile.GetValue("Window", "Height", 0).AsInt32();
+            var width = _configFile.GetValue("Window", "Width", DEFAULT_WINDOW_WIDTH).AsInt32();
+            var height = _configFile.GetValue("Window", "Height", DEFAULT_WINDOW_HEIGHT).AsInt32();
             return new(width, height);
         }
 
@@ -58,7 +60,7 @@ public static class Config
         if (_configFile == null)
         {
             _configFile = new ConfigFile();
-            if (_configFile.Load(_configPath) != Error.Ok)
+            if (_configFile.Load(CONFIG_PATH) != Error.Ok)
             {
                 GD.Print("Failed to load user config");
             }
@@ -72,7 +74,7 @@ public static class Config
             GD.Print("Cannot save user config as it isn't loaded");
             return;
         }
-        if (_configFile.Save(_configPath) != Error.Ok)
+        if (_configFile.Save(CONFIG_PATH) != Error.Ok)
         {
             GD.Print("Failed to save user config");
         }

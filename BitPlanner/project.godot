@@ -16,6 +16,7 @@ config/version="0.1"
 run/main_scene="uid://dreyefd3ftwtt"
 config/quit_on_go_back=false
 config/features=PackedStringArray("4.4", "C#", "GL Compatibility")
+boot_splash/bg_color=Color(0.137255, 0.152941, 0.290196, 1)
 boot_splash/fullsize=false
 boot_splash/image="uid://cvakhg0286y3w"
 config/icon="uid://cvakhg0286y3w"
@@ -24,8 +25,10 @@ config/icon="uid://cvakhg0286y3w"
 
 window/size/viewport_width=648
 window/size/viewport_height=1152
-window/size/window_width_override=640
-window/size/window_height_override=720
+window/size/initial_position_type=4
+window/size/borderless=true
+window/size/window_width_override=600
+window/size/window_height_override=400
 window/energy_saving/keep_screen_on=false
 window/handheld/orientation=1
 

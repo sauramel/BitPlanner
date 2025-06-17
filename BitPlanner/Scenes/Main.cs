@@ -97,25 +97,33 @@ public partial class Main : Control
             _settingsPopup.Hide();
         };
 
-        GetWindow().MinSize = new Vector2I(600, 400);
-        GetWindow().GuiEmbedSubwindows = true;
-        var configWindowSize = Config.WindowSize;
-        if (configWindowSize.X > 0 && configWindowSize.Y > 0)
-        {
-            GetWindow().Size = configWindowSize;
-        }
-        Resized += AdjustLayout;
-        AdjustLayout();
-        UpdateScale(Config.Scale);
+        ConfigureWindowStartup();
 
         _craftPageButton.ButtonPressed = true;
         _craftPage.ShowOverview();
     }
 
+    private void ConfigureWindowStartup()
+    {
+        var window = GetWindow();
+        window.Borderless = false; // TODO: CSD support
+        window.MinSize = new Vector2I(600, 400);
+        var configWindowSize = Config.WindowSize;
+        if (configWindowSize.X > 0 && configWindowSize.Y > 0)
+        {
+            DisplayServer.WindowSetSize(configWindowSize);
+        }
+        Resized += AdjustLayout;
+        UpdateScale(Config.Scale);
+    }
+
     private void UpdateScale(double scale)
     {
         GetWindow().ContentScaleFactor = (float)scale;
-        _settingsPopup.PopupCentered();
+        if (_settingsPopup.Visible)
+        {
+            _settingsPopup.PopupCentered();
+        }
         Config.Scale = scale;
         AdjustLayout();
     }
