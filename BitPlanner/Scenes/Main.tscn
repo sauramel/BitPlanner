@@ -48,28 +48,106 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="CSDBorders" type="GridContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_constants/h_separation = 0
+theme_override_constants/v_separation = 0
+columns = 3
+
+[node name="TopLeft" type="ColorRect" parent="CSDBorders"]
+custom_minimum_size = Vector2(12, 12)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+color = Color(0.0823529, 0.337255, 0.494118, 1)
+
+[node name="Top" type="ColorRect" parent="CSDBorders"]
+custom_minimum_size = Vector2(12, 12)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+color = Color(0.0823529, 0.337255, 0.494118, 1)
+
+[node name="TopRight" type="ColorRect" parent="CSDBorders"]
+custom_minimum_size = Vector2(12, 12)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 0
+color = Color(0.0823529, 0.337255, 0.494118, 1)
+
+[node name="Left" type="ColorRect" parent="CSDBorders"]
+custom_minimum_size = Vector2(12, 12)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 3
+color = Color(0.0823529, 0.337255, 0.494118, 1)
+
+[node name="Filler" type="Control" parent="CSDBorders"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Right" type="ColorRect" parent="CSDBorders"]
+custom_minimum_size = Vector2(12, 12)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 3
+color = Color(0.0823529, 0.337255, 0.494118, 1)
+
+[node name="BottomLeft" type="ColorRect" parent="CSDBorders"]
+custom_minimum_size = Vector2(12, 12)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 8
+color = Color(0.0823529, 0.337255, 0.494118, 1)
+
+[node name="Bottom" type="ColorRect" parent="CSDBorders"]
+custom_minimum_size = Vector2(12, 12)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 8
+color = Color(0.0823529, 0.337255, 0.494118, 1)
+
+[node name="BottomRight" type="ColorRect" parent="CSDBorders"]
+custom_minimum_size = Vector2(12, 12)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 8
+color = Color(0.0823529, 0.337255, 0.494118, 1)
+
+[node name="Content" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 theme_override_constants/separation = 0
 
-[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer"]
+[node name="HeaderBar" type="PanelContainer" parent="Content"]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_idj7w")
 
-[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/PanelContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="Content/HeaderBar"]
 layout_mode = 2
-theme_override_constants/margin_top = 6
-theme_override_constants/margin_bottom = 6
+theme_override_constants/margin_left = 0
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 0
+theme_override_constants/margin_bottom = 4
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/PanelContainer/MarginContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Content/HeaderBar/MarginContainer"]
 layout_mode = 2
 
-[node name="SidebarButton" type="Button" parent="VBoxContainer/PanelContainer/MarginContainer/HBoxContainer"]
+[node name="WindowControlsLeft" type="HBoxContainer" parent="Content/HeaderBar/MarginContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="SidebarButton" type="Button" parent="Content/HeaderBar/MarginContainer/HBoxContainer"]
 layout_mode = 2
 theme_override_colors/icon_hover_pressed_color = Color(0.827451, 0.792157, 0.694118, 1)
 theme_override_colors/icon_hover_color = Color(0.827451, 0.792157, 0.694118, 1)
@@ -82,7 +160,7 @@ action_mode = 0
 icon = ExtResource("2_pbw6q")
 flat = true
 
-[node name="BackButton" type="Button" parent="VBoxContainer/PanelContainer/MarginContainer/HBoxContainer"]
+[node name="BackButton" type="Button" parent="Content/HeaderBar/MarginContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 4
@@ -94,7 +172,7 @@ action_mode = 0
 text = "Back"
 icon = ExtResource("3_v1gob")
 
-[node name="SettingsButton" type="Button" parent="VBoxContainer/PanelContainer/MarginContainer/HBoxContainer"]
+[node name="SettingsButton" type="Button" parent="Content/HeaderBar/MarginContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 10
 theme_override_colors/icon_hover_pressed_color = Color(0.827451, 0.792157, 0.694118, 1)
@@ -105,27 +183,31 @@ theme_override_colors/icon_normal_color = Color(0.827451, 0.792157, 0.694118, 1)
 icon = ExtResource("4_bmxlf")
 flat = true
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+[node name="WindowControlsRight" type="HBoxContainer" parent="Content/HeaderBar/MarginContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Content"]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/separation = 0
 
-[node name="SidebarPlaceholder" type="Control" parent="VBoxContainer/HBoxContainer"]
+[node name="SidebarPlaceholder" type="Control" parent="Content/HBoxContainer"]
 layout_mode = 2
 
-[node name="Pages" type="Control" parent="VBoxContainer/HBoxContainer"]
+[node name="Pages" type="Control" parent="Content/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="CraftPage" parent="VBoxContainer/HBoxContainer/Pages" instance=ExtResource("2_kln2b")]
+[node name="CraftPage" parent="Content/HBoxContainer/Pages" instance=ExtResource("2_kln2b")]
 layout_mode = 1
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="TasksPage" parent="VBoxContainer/HBoxContainer/Pages" instance=ExtResource("5_50glp")]
+[node name="TasksPage" parent="Content/HBoxContainer/Pages" instance=ExtResource("5_50glp")]
 layout_mode = 1
 
-[node name="AboutPage" parent="VBoxContainer/HBoxContainer/Pages" instance=ExtResource("7_4kpch")]
+[node name="AboutPage" parent="Content/HBoxContainer/Pages" instance=ExtResource("7_4kpch")]
 layout_mode = 1
 
 [node name="Sidebar" type="PanelContainer" parent="."]
@@ -134,7 +216,7 @@ layout_mode = 1
 anchors_preset = -1
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = 58.0
+offset_top = 54.0
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_jw32o")
 
@@ -220,14 +302,14 @@ color = Color(0, 0, 0, 0.501961)
 
 [node name="SettingsPopup" type="PopupPanel" parent="."]
 initial_position = 2
-size = Vector2i(457, 288)
+size = Vector2i(457, 264)
 visible = true
 
 [node name="MarginContainer" type="MarginContainer" parent="SettingsPopup"]
 offset_left = 4.0
 offset_top = 4.0
 offset_right = 453.0
-offset_bottom = 280.0
+offset_bottom = 256.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
@@ -239,10 +321,21 @@ size_flags_vertical = 0
 layout_mode = 2
 text = "INTERFACE"
 
+[node name="CSDCheck" type="CheckButton" parent="SettingsPopup/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Client-side decorations"
+flat = true
+
 [node name="HBoxContainer" type="HBoxContainer" parent="SettingsPopup/MarginContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="Scale" type="Label" parent="SettingsPopup/MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="SettingsPopup/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_bottom = 0
+
+[node name="Scale" type="Label" parent="SettingsPopup/MarginContainer/VBoxContainer/HBoxContainer/MarginContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Scale"
@@ -253,6 +346,10 @@ min_value = 1.0
 max_value = 2.0
 step = 0.1
 value = 1.0
+
+[node name="Control" type="Control" parent="SettingsPopup/MarginContainer/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(2, 0)
+layout_mode = 2
 
 [node name="Control" type="Control" parent="SettingsPopup/MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 24)
@@ -265,12 +362,4 @@ text = "CRAFTING"
 [node name="NonGuaranteedAsBaseCheck" type="CheckButton" parent="SettingsPopup/MarginContainer/VBoxContainer"]
 layout_mode = 2
 text = "Treat items with non-guaranteed craft as base items"
-
-[node name="Control2" type="Control" parent="SettingsPopup/MarginContainer/VBoxContainer"]
-custom_minimum_size = Vector2(0, 24)
-layout_mode = 2
-
-[node name="SaveButton" type="Button" parent="SettingsPopup/MarginContainer/VBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 4
-text = "Save"
+flat = true

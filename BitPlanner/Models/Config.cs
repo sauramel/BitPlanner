@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using Godot;
 
 public static class Config
@@ -5,57 +6,56 @@ public static class Config
     private const string CONFIG_PATH = "user://config.ini";
     private const int DEFAULT_WINDOW_WIDTH = 640;
     private const int DEFAULT_WINDOW_HEIGHT = 720;
+    private const double DEFAULT_SCALE = 1.0;
+    private const bool DEFAULT_NON_GUARANTEED_AS_BASE = true;
+    private static readonly bool _defaultCsd = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) || RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
     private static ConfigFile _configFile;
 
     public static Vector2I WindowSize
     {
         get
         {
-            Load();
-            var width = _configFile.GetValue("Window", "Width", DEFAULT_WINDOW_WIDTH).AsInt32();
-            var height = _configFile.GetValue("Window", "Height", DEFAULT_WINDOW_HEIGHT).AsInt32();
+            var width = _configFile?.GetValue("Window", "Width", DEFAULT_WINDOW_WIDTH).AsInt32() ?? DEFAULT_WINDOW_WIDTH;
+            var height = _configFile?.GetValue("Window", "Height", DEFAULT_WINDOW_HEIGHT).AsInt32() ?? DEFAULT_WINDOW_HEIGHT;
             return new(width, height);
         }
 
         set
         {
-            Load();
-            _configFile.SetValue("Window", "Width", value.X);
-            _configFile.SetValue("Window", "Height", value.Y);
+            _configFile?.SetValue("Window", "Width", value.X);
+            _configFile?.SetValue("Window", "Height", value.Y);
         }
+    }
+
+    public static bool ClientSideDecorations
+    {
+        get
+        {
+            if (OS.GetName().Contains("Android"))
+            {
+                return false;
+            }
+            return _configFile?.GetValue("Window", "CSD", _defaultCsd).AsBool() ?? _defaultCsd;
+        }
+
+        set => _configFile?.SetValue("Window", "CSD", value);
     }
 
     public static double Scale
     {
-        get
-        {
-            Load();
-            return _configFile.GetValue("Window", "Scale", OS.GetName().Contains("Android") ? 1.5 : 1.0).AsDouble();
-        }
+        get => _configFile?.GetValue("Window", "Scale", OS.GetName().Contains("Android") ? 1.5 : DEFAULT_SCALE).AsDouble() ?? DEFAULT_SCALE;
 
-        set
-        {
-            Load();
-            _configFile.SetValue("Window", "Scale", value);
-        }
+        set => _configFile?.SetValue("Window", "Scale", value);
     }
 
     public static bool TreatNonGuaranteedItemsAsBase
     {
-        get
-        {
-            Load();
-            return _configFile.GetValue("Craft", "NonGuaranteedAsBase", true).AsBool();
-        }
+        get => _configFile?.GetValue("Craft", "NonGuaranteedAsBase", DEFAULT_NON_GUARANTEED_AS_BASE).AsBool() ?? DEFAULT_NON_GUARANTEED_AS_BASE;
 
-        set
-        {
-            Load();
-            _configFile.SetValue("Craft", "NonGuaranteedAsBase", value);
-        }
+        set => _configFile?.SetValue("Craft", "NonGuaranteedAsBase", value);
     }
 
-    private static void Load()
+    public static void Load()
     {
         if (_configFile == null)
         {
@@ -69,12 +69,7 @@ public static class Config
 
     public static void Save()
     {
-        if (_configFile == null)
-        {
-            GD.Print("Cannot save user config as it isn't loaded");
-            return;
-        }
-        if (_configFile.Save(CONFIG_PATH) != Error.Ok)
+        if (_configFile?.Save(CONFIG_PATH) != Error.Ok)
         {
             GD.Print("Failed to save user config");
         }

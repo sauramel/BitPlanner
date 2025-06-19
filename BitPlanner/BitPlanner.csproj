@@ -4,10 +4,20 @@
     <EnableDynamicLoading>true</EnableDynamicLoading>
   </PropertyGroup>
   
-  <PropertyGroup Condition="$(RuntimeIdentifier.StartsWith('linux'))">
+  <PropertyGroup Condition="'$(GodotTargetPlatform)' == 'windows'">
+    <DefineConstants>WINDOWS</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(GodotTargetPlatform)' == 'linuxbsd'">
+    <DefineConstants>LINUX</DefineConstants>
     <PublishAOT>true</PublishAOT>
   </PropertyGroup>
-  <ItemGroup Condition="$(RuntimeIdentifier.StartsWith('linux'))">
+  
+  <PropertyGroup Condition="'$(GodotTargetPlatform)' == 'macos'">
+    <DefineConstants>MACOS</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
     <TrimmerRootAssembly Include="GodotSharp" />
     <TrimmerRootAssembly Include="$(TargetName)" />
   </ItemGroup>
