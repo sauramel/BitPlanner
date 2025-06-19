@@ -104,6 +104,7 @@ public partial class Traveler : VBoxContainer
     private void OnThemeChanged()
     {
         var iconsColor = Color.FromHtml(Config.Theme == Config.ThemeVariant.Dark? "e9dfc4" : "15567e");
+        _skillIcon.Modulate = iconsColor;
 
         var root = _tasks.GetRoot();
         foreach (var task in root.GetChildren())

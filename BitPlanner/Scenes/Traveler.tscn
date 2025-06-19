@@ -29,6 +29,7 @@ metadata/_tab_index = 0
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 2
 size_flags_horizontal = 4
+theme_override_constants/separation = 12
 
 [node name="MarginContainer" type="Control" parent="HBoxContainer"]
 custom_minimum_size = Vector2(91, 99)
