@@ -1,0 +1,59 @@
+[gd_scene load_steps=2 format=3 uid="uid://cjbshscscgpkj"]
+
+[ext_resource type="Script" uid="uid://b3ihrutdkde3b" path="res://Scenes/CraftOverview.cs" id="1_ssc42"]
+
+[node name="Overview" type="MarginContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_bottom = 0
+script = ExtResource("1_ssc42")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="SearchEntry" type="LineEdit" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Search item..."
+
+[node name="TierSelection" type="OptionButton" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+selected = 0
+item_count = 11
+popup/item_0/text = "Any Tier"
+popup/item_0/id = 0
+popup/item_1/text = "Tier 1"
+popup/item_1/id = 1
+popup/item_2/text = "Tier 2"
+popup/item_2/id = 2
+popup/item_3/text = "Tier 3"
+popup/item_3/id = 3
+popup/item_4/text = "Tier 4"
+popup/item_4/id = 4
+popup/item_5/text = "Tier 5"
+popup/item_5/id = 5
+popup/item_6/text = "Tier 6"
+popup/item_6/id = 6
+popup/item_7/text = "Tier 7"
+popup/item_7/id = 7
+popup/item_8/text = "Tier 8"
+popup/item_8/id = 8
+popup/item_9/text = "Tier 9"
+popup/item_9/id = 9
+popup/item_10/text = "Tier 10"
+popup/item_10/id = 10
+
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Items" type="FlowContainer" parent="VBoxContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
