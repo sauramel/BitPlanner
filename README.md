@@ -15,6 +15,7 @@ Statistics calculator with gathering/effort calculations is planned for the futu
 ![](Screenshots/main.png)
 ![](Screenshots/crafting.png)
 ![](Screenshots/tasks.png)
+![](Screenshots/android.png)
 
 ### Legal notice
 
