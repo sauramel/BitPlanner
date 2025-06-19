@@ -29,7 +29,7 @@
      inkscape:document-units="px"
      inkscape:zoom="2.4765712"
      inkscape:cx="102.15737"
-     inkscape:cy="119.92387"
+     inkscape:cy="120.32765"
      inkscape:window-width="1745"
      inkscape:window-height="913"
      inkscape:window-x="0"
@@ -134,9 +134,10 @@
        height="33.866665"
        x="33.866547"
        y="-2.2799446e-07"
-       inkscape:export-filename="icon-android-bg.svg"
+       inkscape:export-filename="icon-android-bg.png"
        inkscape:export-xdpi="324"
-       inkscape:export-ydpi="324" />
+       inkscape:export-ydpi="324"
+       rx="4.7624998" />
     <path
        id="path9-9"
        style="display:inline;fill:none;stroke:#ffcb1a;stroke-width:0.344028;stroke-linecap:butt;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:0.857775"
