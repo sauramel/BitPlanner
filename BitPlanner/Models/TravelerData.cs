@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-public class Traveler
+public class TravelerData
 {
     public string Name { get; set; }
     public int Skill { get; set; }

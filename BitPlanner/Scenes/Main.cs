@@ -8,6 +8,8 @@ public partial class Main : Control
     /// A minimum window content width (without scaling applied) at which the sidebar is shown unfolded
     /// </summary>
     private const int SIDEBAR_THRESHOLD = 850;
+    private Theme _lightTheme;
+    private Theme _darkTheme;
     private Action _backButtonCallback;
     private PanelContainer _headerbar;
     private Button _sidebarButton;
@@ -26,6 +28,7 @@ public partial class Main : Control
     private TasksPage _tasksPage;
     private AboutPage _aboutPage;
     private PopupPanel _settingsPopup;
+    private OptionButton _themeSelection;
     private CheckButton _csdCheck;
     private SpinBox _uiScaleSpin;
     private CheckButton _nonGuaranteedAsBaseCheck;
@@ -41,6 +44,9 @@ public partial class Main : Control
             GetTree().Quit();
         }
         Config.Load();
+
+        _lightTheme = GD.Load<Theme>("res://LightTheme.tres");
+        _darkTheme = GD.Load<Theme>("res://DarkTheme.tres");
 
         _headerbar = GetNode<PanelContainer>("Content/HeaderBar");
         _headerbar.GuiInput += (inputEvent) =>
@@ -144,7 +150,6 @@ public partial class Main : Control
 
         _craftPage = GetNode<CraftPage>("Content/HBoxContainer/Pages/CraftPage");
         _craftPage.BackButtonCallbackChanged += (_, callback) => SetBackButtonCallback(callback);
-        _craftPage.Load();
         _craftPage.Visible = false;
 
         _tasksPage = GetNode<TasksPage>("Content/HBoxContainer/Pages/TasksPage");
@@ -153,11 +158,18 @@ public partial class Main : Control
             _craftPageButton.ButtonPressed = true;
             _craftPage.ShowRecipe(e.Id, e.Quantity);
         };
-        _tasksPage.Load();
         _tasksPage.Visible = false;
 
         _aboutPage = GetNode<AboutPage>("Content/HBoxContainer/Pages/AboutPage");
         _aboutPage.Visible = false;
+
+        _themeSelection = _settingsPopup.GetNode<OptionButton>("MarginContainer/VBoxContainer/HBoxContainer/ThemeSelection");
+        _themeSelection.Select((int)Config.Theme);
+        _themeSelection.ItemSelected += (selected) =>
+        {
+            Config.Theme = (Config.ThemeVariant)selected;
+            ChangeTheme();
+        };
 
         _csdCheck = _settingsPopup.GetNode<CheckButton>("MarginContainer/VBoxContainer/CSDCheck");
         if (OS.GetName().Contains("Android"))
@@ -175,13 +187,17 @@ public partial class Main : Control
             ChangeDecorations(Config.ClientSideDecorations);
         }
 
-        _uiScaleSpin = _settingsPopup.GetNode<SpinBox>("MarginContainer/VBoxContainer/HBoxContainer/ScaleSpin");
+        _uiScaleSpin = _settingsPopup.GetNode<SpinBox>("MarginContainer/VBoxContainer/HBoxContainer2/ScaleSpin");
         _uiScaleSpin.SetValueNoSignal(Config.Scale);
         _uiScaleSpin.ValueChanged += UpdateScale;
 
         _nonGuaranteedAsBaseCheck = _settingsPopup.GetNode<CheckButton>("MarginContainer/VBoxContainer/NonGuaranteedAsBaseCheck");
         _nonGuaranteedAsBaseCheck.SetPressedNoSignal(Config.TreatNonGuaranteedItemsAsBase);
         _nonGuaranteedAsBaseCheck.Toggled += (toggled) => Config.TreatNonGuaranteedItemsAsBase = toggled;
+
+        ChangeTheme();
+        _craftPage.Load();
+        _tasksPage.Load();
 
         var window = GetWindow();
         window.CloseRequested += OnCloseRequested;
@@ -197,6 +213,25 @@ public partial class Main : Control
 
         _craftPageButton.ButtonPressed = true;
         _craftPage.ShowOverview();
+    }
+
+    private void ChangeTheme()
+    {
+        var isDark = Config.Theme == Config.ThemeVariant.Dark;
+        Theme = isDark ? _darkTheme : _lightTheme;
+        var normalIconColor = Color.FromHtml(isDark ? "e9dfc4" : "15567e");
+        var pressedIconColor = Color.FromHtml(isDark ? "221f2c" : "e9dfc4");
+        foreach (var button in new[] { _craftPageButton, _tasksPageButton, _aboutPageButton })
+        {
+            foreach (var style in new[] { "icon_normal_color", "icon_hover_color", "icon_pressed_color", "icon_hover_pressed_color" })
+            {
+                button.RemoveThemeColorOverride(style);
+            }
+            button.AddThemeColorOverride("icon_normal_color", normalIconColor);
+            button.AddThemeColorOverride("icon_hover_color", normalIconColor);
+            button.AddThemeColorOverride("icon_pressed_color", pressedIconColor);
+            button.AddThemeColorOverride("icon_hover_pressed_color", pressedIconColor);
+        }
     }
 
     private void ChangeDecorations(bool clientSide)

@@ -3,9 +3,16 @@ using Godot;
 
 public static class Config
 {
+    public enum ThemeVariant
+    {
+        Light = 0,
+        Dark
+    }
+
     private const string CONFIG_PATH = "user://config.ini";
     private const int DEFAULT_WINDOW_WIDTH = 640;
     private const int DEFAULT_WINDOW_HEIGHT = 720;
+    private const ThemeVariant DEFAULT_THEME = ThemeVariant.Light;
     private const double DEFAULT_SCALE = 1.0;
     private const bool DEFAULT_NON_GUARANTEED_AS_BASE = true;
     private static readonly bool _defaultCsd = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) || RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
@@ -25,6 +32,13 @@ public static class Config
             _configFile?.SetValue("Window", "Width", value.X);
             _configFile?.SetValue("Window", "Height", value.Y);
         }
+    }
+
+    public static ThemeVariant Theme
+    {
+        get => (ThemeVariant?)_configFile?.GetValue("Window", "Theme", (int)DEFAULT_THEME).AsInt32() ?? DEFAULT_THEME;
+
+        set => _configFile?.SetValue("Window", "Theme", (int)value);
     }
 
     public static bool ClientSideDecorations

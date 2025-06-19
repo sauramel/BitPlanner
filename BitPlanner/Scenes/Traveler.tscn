@@ -1,5 +1,6 @@
-[gd_scene load_steps=6 format=3 uid="uid://bglfl8bcsoxgt"]
+[gd_scene load_steps=7 format=3 uid="uid://bglfl8bcsoxgt"]
 
+[ext_resource type="Script" uid="uid://dyhqy2f337pv3" path="res://Scenes/Traveler.cs" id="1_tn6o6"]
 [ext_resource type="Texture2D" uid="uid://dhj8tu343jcks" path="res://Assets/Travelers/Ramparte.png" id="1_wrl8a"]
 
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_ke1hp"]
@@ -22,6 +23,7 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+script = ExtResource("1_tn6o6")
 metadata/_tab_index = 0
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
@@ -73,5 +75,6 @@ theme_override_styles/selected_focus = SubResource("StyleBoxEmpty_thvg7")
 columns = 3
 hide_folding = true
 hide_root = true
+select_mode = 1
 scroll_horizontal_enabled = false
 auto_tooltip = false

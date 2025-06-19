@@ -18,7 +18,8 @@ public partial class CraftPage : PanelContainer, IPage
     private Label _recipeName;
     private Label _recipeTier;
     private Label _recipeRarity;
-    private AtlasTexture _skillIcon;
+    private TextureRect _skillIcon;
+    private AtlasTexture _skillIconTexture;
     private Label _skillLabel;
     private OptionButton _recipeSelection;
     private SpinBox _quantitySelection;
@@ -61,7 +62,8 @@ public partial class CraftPage : PanelContainer, IPage
         _recipeTier = recipeHeader.GetNode<Label>("VBoxContainer/Tier");
         _recipeRarity = recipeHeader.GetNode<Label>("VBoxContainer/Rarity");
 
-        _skillIcon = recipeHeader.GetNode<TextureRect>("VBoxContainer2/HBoxContainer/SkillIcon").Texture as AtlasTexture;
+        _skillIcon = recipeHeader.GetNode<TextureRect>("VBoxContainer2/HBoxContainer/SkillIcon");
+        _skillIconTexture = _skillIcon.Texture as AtlasTexture;
         _skillLabel = recipeHeader.GetNode<Label>("VBoxContainer2/HBoxContainer/SkillLabel");
         _recipeSelection = recipeHeader.GetNode<OptionButton>("VBoxContainer2/HBoxContainer/RecipeSelection");
         _recipeSelection.ItemSelected += OnRecipeChanged;
@@ -90,6 +92,8 @@ public partial class CraftPage : PanelContainer, IPage
         _recipeLoopPopup = GetNode<PopupPanel>("RecipeLoopPopup");
         _recipeLoopPopup.Visible = false;
         _recipeLoopLabel = _recipeLoopPopup.GetNode<Label>("MarginContainer/Label");
+
+        ThemeChanged += OnThemeChanged;
     }
 
     public void Load()
@@ -111,6 +115,7 @@ public partial class CraftPage : PanelContainer, IPage
                 }
             }
 
+            button.SetMeta("Rarity", data.Rarity);
             foreach (var styleName in new[] { "normal", "pressed", "hover", "hover_pressed" })
             {
                 var defaultStyle = button.GetThemeStylebox(styleName) as StyleBoxFlat;
@@ -144,6 +149,23 @@ public partial class CraftPage : PanelContainer, IPage
         }
     }
 
+    private void OnThemeChanged()
+    {
+        foreach (var button in _items.GetChildren().Cast<Button>())
+        {
+            foreach (var styleName in new[] { "normal", "pressed", "hover", "hover_pressed" })
+            {
+                button.RemoveThemeStyleboxOverride(styleName);
+                var defaultStyle = button.GetThemeStylebox(styleName) as StyleBoxFlat;
+                var customStyle = defaultStyle.Duplicate() as StyleBoxFlat;
+                customStyle.SetBorderWidthAll(1);
+                customStyle.BorderColor = Rarity.GetColor(button.GetMeta("Rarity").AsInt32());
+                button.AddThemeStyleboxOverride(styleName, customStyle);
+            }
+        }
+        _skillIcon.Modulate = Color.FromHtml(Config.Theme == Config.ThemeVariant.Dark ? "e9dfc4" : "15567e");
+    }
+
     public void ShowRecipe(int id, uint quantity = 1)
     {
         _overview.Visible = false;
@@ -164,7 +186,7 @@ public partial class CraftPage : PanelContainer, IPage
         _recipeRarity.Text = Rarity.GetName(craftingItem.Rarity);
         _recipeRarity.AddThemeColorOverride("font_color", Rarity.GetColor(craftingItem.Rarity));
 
-        _skillIcon.Region = Skill.GetAtlasRect(craftingItem.Recipes[0].LevelRequirements[0]);
+        _skillIconTexture.Region = Skill.GetAtlasRect(craftingItem.Recipes[0].LevelRequirements[0]);
         _skillLabel.Text = $"{Skill.GetName(craftingItem.Recipes[0].LevelRequirements[0])} Lv. {craftingItem.Recipes[0].LevelRequirements[1]}";
 
         _recipeSelection.Clear();

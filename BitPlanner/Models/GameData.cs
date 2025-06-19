@@ -9,8 +9,8 @@ using Godot;
 [JsonSerializable(typeof(CraftingItem))]
 [JsonSerializable(typeof(ConsumedItem))]
 [JsonSerializable(typeof(Recipe))]
-[JsonSerializable(typeof(List<Traveler>))]
-[JsonSerializable(typeof(Traveler))]
+[JsonSerializable(typeof(List<TravelerData>))]
+[JsonSerializable(typeof(TravelerData))]
 [JsonSerializable(typeof(TravelerTask))]
 public partial class GameDataContext : JsonSerializerContext
 {
@@ -33,7 +33,7 @@ public sealed class GameData
     }
 
     public Dictionary<int, CraftingItem> CraftingItems { get; private set; }
-    public List<Traveler> Travelers { get; private set; }
+    public List<TravelerData> Travelers { get; private set; }
 
     private GameData()
     {
@@ -47,7 +47,7 @@ public sealed class GameData
         try
         {
             CraftingItems = JsonSerializer.Deserialize(craftingDataFile.GetAsText(), GameDataContext.Default.DictionaryInt32CraftingItem);
-            Travelers = JsonSerializer.Deserialize(travelersDataFile.GetAsText(), GameDataContext.Default.ListTraveler);
+            Travelers = JsonSerializer.Deserialize(travelersDataFile.GetAsText(), GameDataContext.Default.ListTravelerData);
         }
         catch (Exception e)
         {
