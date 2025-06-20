@@ -2,6 +2,8 @@ using Godot;
 
 public static class Skill
 {
+    public static readonly int[] All = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 17, 18, 19, 21];
+
     public static string GetName(int id)
     {
         return id switch

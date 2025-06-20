@@ -7,5 +7,6 @@ public class CraftingItem
     public int Rarity { get; set; }
     public string Icon { get; set; }
     public List<Recipe> Recipes { get; set; } = [];
+    public int ExtractionSkill { get; set; } = -1;
     public bool Craftable => Recipes.Count > 0;
 }

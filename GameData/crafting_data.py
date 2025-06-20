@@ -4,9 +4,11 @@ import os.path
 
 root = 'BitCraft_GameData/server/region'
 crafting_recipes = json.load(open(f'{root}/crafting_recipe_desc.json'))
+extraction_recipes = json.load(open(f'{root}/extraction_recipe_desc.json'))
 items = json.load(open(f'{root}/item_desc.json'))
 item_lists = json.load(open(f'{root}/item_list_desc.json'))
 cargos = json.load(open(f'{root}/cargo_desc.json'))
+enemies = json.load(open(f'{root}/enemy_desc.json'))
 
 crafting_data = {}
 
@@ -36,6 +38,31 @@ def find_recipes(id):
 				recipes.append(recipe_data)
 	return recipes
 
+def find_extraction_skill(id):
+	skill = -1
+	found = False
+	for recipe in extraction_recipes:
+		for extracted in recipe['extracted_item_stacks']:
+			if extracted[0][1][0] == id:
+				skill = recipe['level_requirements'][0][0]
+				found = True
+				break
+		if found:
+			break
+
+	if found:
+		return skill
+	
+	for enemy in enemies:
+		for extracted in enemy['extracted_item_stacks']:
+			if extracted[0][1][0] == id:
+				skill = enemy['experience_per_damage_dealt'][0][0]
+				found = True
+				break
+		if found:
+			break
+	return skill
+
 print('Collecting items...')
 for item in items:
 	id = item['id']
@@ -44,7 +71,8 @@ for item in items:
 		'tier': item['tier'],
 		'rarity': item['rarity'][0],
 		'icon': item['icon_asset_name'].replace('GeneratedIcons/', ''),
-		'recipes': find_recipes(id)
+		'recipes': find_recipes(id),
+		'extraction_skill': find_extraction_skill(id)
 	}
 
 print('Collecing cargos...')
@@ -58,7 +86,7 @@ for item in cargos:
 		'rarity': item['rarity'][0],
 		'icon': item['icon_asset_name'].replace('GeneratedIcons/', ''),
 		'recipes': find_recipes(id),
-		'visible': True
+		'extraction_skill': find_extraction_skill(id)
 	}
 
 print('Checking icons...')
@@ -104,6 +132,7 @@ for item in items:
 				possible_recipes[target_id][quantity] += chance
 
 		recipes = find_recipes(id)
+		skill = find_extraction_skill(id)
 
 		for target_id, possibilities in possible_recipes.items():
 			if not target_id in crafting_data.keys():
@@ -113,7 +142,8 @@ for item in items:
 			for recipe in new_recipes:
 				recipe['possibilities'] = {k: possibilities[k] for k in sorted(possibilities)}
 			crafting_data[target_id]['recipes'].extend(new_recipes)
-
+			if crafting_data[target_id]['extraction_skill'] == -1:
+				crafting_data[target_id]['extraction_skill'] = skill
 		break
 
 print('Cleanup...')

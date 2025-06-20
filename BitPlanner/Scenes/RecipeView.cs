@@ -267,17 +267,40 @@ public partial class RecipeView : VBoxContainer
     private void OnBaseIngredientsRequested()
     {
         var recipeRoot = _recipeTree.GetRoot();
-        var data = new Dictionary<int, int[]>();
-        GetBaseIngredients(recipeRoot, ref data);
+        var unsortedData = new Dictionary<int, int[]>();
+        GetBaseIngredients(recipeRoot, ref unsortedData);
+        var data = unsortedData.OrderBy(pair => _data.CraftingItems[pair.Key].Name);
 
         _baseIngredientsTree.Clear();
         var ingredientsRoot = _baseIngredientsTree.CreateItem();
 
-        var dataForCopying = new Godot.Collections.Dictionary<string, string>();
+        var skillTreeItems = new Dictionary<int, TreeItem>();
+        foreach (var skill in Skill.All)
+        {
+            var skillTreeItem = _baseIngredientsTree.CreateItem(ingredientsRoot);
+            skillTreeItem.SetText(0, Skill.GetName(skill));
+            skillTreeItem.SetExpandRight(0, true);
+            skillTreeItems.Add(skill, skillTreeItem);
+        }
+        var unknown = _baseIngredientsTree.CreateItem(ingredientsRoot);
+        unknown.SetText(0, Skill.GetName(-1));
+        unknown.SetExpandRight(0, true);
+        skillTreeItems.Add(-1, unknown);
+
+        var dataForCopying = new Godot.Collections.Dictionary<string, Godot.Collections.Array<string>>();
         foreach (var item in data)
         {
             var craftingItem = _data.CraftingItems[item.Key];
-            var treeItem = ingredientsRoot.CreateChild();
+            var skill = -1;
+            if (craftingItem.ExtractionSkill > -1)
+            {
+                skill = craftingItem.ExtractionSkill;
+            }
+            else if (craftingItem.Recipes.Count > 0)
+            {
+                skill = craftingItem.Recipes[0].LevelRequirements[0];
+            }
+            var treeItem = _baseIngredientsTree.CreateItem(skillTreeItems[skill]);
 
             treeItem.SetText(0, craftingItem.Name);
             treeItem.SetTooltipText(0, $"{craftingItem.Name} ({Rarity.GetName(craftingItem.Rarity)})");
@@ -298,7 +321,14 @@ public partial class RecipeView : VBoxContainer
             var quantityString = GetQuantityString(minQuantity, maxQuantity);
             treeItem.SetText(1, quantityString);
 
-            dataForCopying.Add(craftingItem.Name, quantityString);
+            dataForCopying.Add(craftingItem.Name, [Skill.GetName(skill), quantityString]);
+        }
+        foreach (var skillTreeItem in skillTreeItems.Values)
+        {
+            if (skillTreeItem.GetChildCount() == 0)
+            {
+                skillTreeItem.Visible = false;
+            }
         }
         ingredientsRoot.SetMetadata(0, dataForCopying);
         _baseIngredientsPopup.PopupCentered();
@@ -357,23 +387,31 @@ public partial class RecipeView : VBoxContainer
 
     private void OnBaseIngredientsCopyPlainRequested()
     {
-        var data = _baseIngredientsTree.GetRoot().GetMetadata(0).AsGodotDictionary<string, string>();
+        var unsortedData = _baseIngredientsTree.GetRoot().GetMetadata(0).AsGodotDictionary<string, Godot.Collections.Array<string>>();
+        var data = unsortedData.OrderBy(pair => pair.Value[0]);
         var text = new StringBuilder();
+        var skill = "";
         foreach (var item in data)
         {
-            text.Append($"{item.Key} — {item.Value}\n");
+            if (skill != item.Value[0])
+            {
+                skill = item.Value[0];
+                text.Append($"\n{skill}\n");
+            }
+            text.Append($"{item.Key}: {item.Value[1]}\n");
         }
-        DisplayServer.ClipboardSet(text.ToString());
+        DisplayServer.ClipboardSet(text.ToString().Trim());
     }
 
     private void OnBaseIngredientsCopyCsvRequested()
     {
-        var data = _baseIngredientsTree.GetRoot().GetMetadata(0).AsGodotDictionary<string, string>();
+        var unsortedData = _baseIngredientsTree.GetRoot().GetMetadata(0).AsGodotDictionary<string, Godot.Collections.Array<string>>();
+        var data = unsortedData.OrderBy(pair => pair.Value[0]);
         var text = new StringBuilder();
-        text.Append("Item Name,Quantity\n");
+        text.Append("Item Name,Profession/Skill,Quantity\n");
         foreach (var item in data)
         {
-            text.Append($"{item.Key},{item.Value}\n");
+            text.Append($"{item.Key},{item.Value[0]},{item.Value[1]}\n");
         }
         DisplayServer.ClipboardSet(text.ToString());
     }
