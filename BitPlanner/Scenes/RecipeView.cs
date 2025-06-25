@@ -69,7 +69,7 @@ public partial class RecipeView : VBoxContainer
         ThemeChanged += OnThemeChanged;
     }
 
-    public void ShowRecipe(int id, uint quantity = 1)
+    public void ShowRecipe(ulong id, uint quantity = 1)
     {
         var craftingItem = _data.CraftingItems[id];
 
@@ -104,7 +104,7 @@ public partial class RecipeView : VBoxContainer
         _quantitySelection.SetValueNoSignal(quantity);
     }
 
-    private void BuildTree(int id, TreeItem treeItem, HashSet<int> shownIds, uint recipeIndex, uint minQuantity, uint maxQuantity)
+    private void BuildTree(ulong id, TreeItem treeItem, HashSet<ulong> shownIds, uint recipeIndex, uint minQuantity, uint maxQuantity)
     {
         foreach (var child in treeItem.GetChildren())
         {
@@ -245,7 +245,7 @@ public partial class RecipeView : VBoxContainer
             return;
         }
 
-        var id = treeItem.GetMetadata(0).AsInt32();
+        var id = treeItem.GetMetadata(0).AsUInt64();
         var quantityMeta = treeItem.GetMetadata(2).AsGodotArray();
         BuildTree(id, treeItem, [id], (uint)index, quantityMeta[0].AsUInt32(), quantityMeta[1].AsUInt32());
     }
@@ -259,7 +259,7 @@ public partial class RecipeView : VBoxContainer
             return;
         }
 
-        var id = treeItem.GetMetadata(0).AsInt32();
+        var id = treeItem.GetMetadata(0).AsUInt64();
         var recipeMeta = treeItem.GetMetadata(1).AsGodotArray();
         BuildTree(id, treeItem, [id], recipeMeta[0].AsUInt32(), (uint)quantity, (uint)quantity);
     }
@@ -267,7 +267,7 @@ public partial class RecipeView : VBoxContainer
     private void OnBaseIngredientsRequested()
     {
         var recipeRoot = _recipeTree.GetRoot();
-        var unsortedData = new Dictionary<int, int[]>();
+        var unsortedData = new Dictionary<ulong, int[]>();
         GetBaseIngredients(recipeRoot, ref unsortedData);
         var data = unsortedData.OrderBy(pair => _data.CraftingItems[pair.Key].Name);
 
@@ -334,7 +334,7 @@ public partial class RecipeView : VBoxContainer
         _baseIngredientsPopup.PopupCentered();
     }
 
-    private void GetBaseIngredients(TreeItem item, ref Dictionary<int, int[]> data)
+    private void GetBaseIngredients(TreeItem item, ref Dictionary<ulong, int[]> data)
     {
         var guaranteedCraft = true;
         if (Config.TreatNonGuaranteedItemsAsBase)
@@ -358,7 +358,7 @@ public partial class RecipeView : VBoxContainer
             return;
         }
 
-        var id = item.GetMetadata(0).AsInt32();
+        var id = item.GetMetadata(0).AsUInt64();
         var quantity = item.GetMetadata(2).AsInt32Array();
         var minQuantity = quantity[0];
         var maxQuantity = quantity[1];
@@ -427,8 +427,13 @@ public partial class RecipeView : VBoxContainer
         }
 
         treeItem.ClearButtons();
-        var id = treeItem.GetMetadata(0).AsInt32();
-        var shownIds = recipeMeta[1].AsInt32Array().ToHashSet();
+        var id = treeItem.GetMetadata(0).AsUInt64();
+        var shownIdsArray = recipeMeta[1].AsGodotArray();
+        var shownIds = new HashSet<ulong>();
+        foreach (var shownId in shownIdsArray)
+        {
+            shownIds.Add(shownId.AsUInt64());
+        }
         var quantityMeta = treeItem.GetMetadata(2).AsGodotArray();
         BuildTree(id, treeItem, shownIds, newRecipeIndex, quantityMeta[0].AsUInt32(), quantityMeta[1].AsUInt32());
     }

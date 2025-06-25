@@ -5,7 +5,7 @@ using System.Text.Json.Serialization;
 using Godot;
 
 [JsonSourceGenerationOptions(AllowTrailingCommas = true, PropertyNamingPolicy = JsonKnownNamingPolicy.SnakeCaseLower)]
-[JsonSerializable(typeof(Dictionary<int, CraftingItem>))]
+[JsonSerializable(typeof(Dictionary<ulong, CraftingItem>))]
 [JsonSerializable(typeof(CraftingItem))]
 [JsonSerializable(typeof(ConsumedItem))]
 [JsonSerializable(typeof(Recipe))]
@@ -32,7 +32,7 @@ public sealed class GameData
         }
     }
 
-    public Dictionary<int, CraftingItem> CraftingItems { get; private set; }
+    public Dictionary<ulong, CraftingItem> CraftingItems { get; private set; }
     public List<TravelerData> Travelers { get; private set; }
 
     private GameData()
@@ -46,7 +46,7 @@ public sealed class GameData
 
         try
         {
-            CraftingItems = JsonSerializer.Deserialize(craftingDataFile.GetAsText(), GameDataContext.Default.DictionaryInt32CraftingItem);
+            CraftingItems = JsonSerializer.Deserialize(craftingDataFile.GetAsText(), GameDataContext.Default.DictionaryUInt64CraftingItem);
             Travelers = JsonSerializer.Deserialize(travelersDataFile.GetAsText(), GameDataContext.Default.ListTravelerData);
         }
         catch (Exception e)

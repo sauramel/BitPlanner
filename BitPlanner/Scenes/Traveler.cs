@@ -5,7 +5,7 @@ public partial class Traveler : VBoxContainer
 {
     public class CraftRequestedEventArgs : EventArgs
     {
-        public int Id;
+        public ulong Id;
         public uint Quantity;
     }
 
@@ -124,7 +124,7 @@ public partial class Traveler : VBoxContainer
         var data = item.GetMetadata((int)column).AsGodotArray();
         var e = new CraftRequestedEventArgs()
         {
-            Id = data[0].AsInt32(),
+            Id = data[0].AsUInt64(),
             Quantity = data[1].AsUInt32()
         };
         CraftRequested?.Invoke(this, e);

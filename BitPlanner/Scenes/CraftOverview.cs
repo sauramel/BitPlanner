@@ -9,7 +9,7 @@ public partial class CraftOverview : MarginContainer
     private OptionButton _tierSelection;
     private FlowContainer _items;
 
-    public event EventHandler<int> RecipeRequested;
+    public event EventHandler<ulong> RecipeRequested;
 
     public override void _Ready()
     {

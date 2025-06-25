@@ -10,13 +10,18 @@ item_lists = json.load(open(f'{root}/item_list_desc.json'))
 cargos = json.load(open(f'{root}/cargo_desc.json'))
 enemies = json.load(open(f'{root}/enemy_desc.json'))
 
+cargo_offset = 0xffffffff
 crafting_data = {}
 
-def find_recipes(id):
+def find_recipes(id, is_cargo = False):
 	recipes = []
+	item_type = 1 if is_cargo else 0
 	for recipe in crafting_recipes:
 		for result in recipe['crafted_item_stacks']:
 			if result[0] == id:
+				if result[2][0] != item_type:
+					continue
+
 				consumed_items = []
 				consumes_itself = False
 
@@ -24,7 +29,8 @@ def find_recipes(id):
 					if item[0] == id:
 						consumes_itself = True
 						break
-					consumed_items.append({ 'id': item[0], 'quantity': item[1] })
+					consumed_id = item[0] + (cargo_offset if item[2][0] == 1 else 0)
+					consumed_items.append({ 'id': consumed_id, 'quantity': item[1] })
 				
 				if consumes_itself:
 					continue
@@ -38,12 +44,15 @@ def find_recipes(id):
 				recipes.append(recipe_data)
 	return recipes
 
-def find_extraction_skill(id):
+def find_extraction_skill(id, is_cargo = False):
 	skill = -1
 	found = False
+	item_type = 1 if is_cargo else 0
 	for recipe in extraction_recipes:
-		for extracted in recipe['extracted_item_stacks']:
-			if extracted[0][1][0] == id:
+		for result in recipe['extracted_item_stacks']:
+			if result[0][1][0] == id:
+				if result[0][1][2][0] != item_type:
+					continue
 				skill = recipe['level_requirements'][0][0]
 				found = True
 				break
@@ -54,8 +63,10 @@ def find_extraction_skill(id):
 		return skill
 	
 	for enemy in enemies:
-		for extracted in enemy['extracted_item_stacks']:
-			if extracted[0][1][0] == id:
+		for result in enemy['extracted_item_stacks']:
+			if result[0][1][0] == id:
+				if result[0][1][2][0] != item_type:
+					continue
 				skill = enemy['experience_per_damage_dealt'][0][0]
 				found = True
 				break
@@ -66,6 +77,10 @@ def find_extraction_skill(id):
 print('Collecting items...')
 for item in items:
 	id = item['id']
+	if id > cargo_offset:
+		print(f'FATAL: item id {id} exceeds uint32 range')
+		os.exit(1)
+
 	crafting_data[id] = {
 		'name': item['name'],
 		'tier': item['tier'],
@@ -78,15 +93,17 @@ for item in items:
 print('Collecing cargos...')
 for item in cargos:
 	id = item['id']
-	if id in crafting_data.keys() and crafting_data[id]['tier'] > -1:
-		continue
-	crafting_data[id] = {
+	if id > cargo_offset:
+		print(f'FATAL: cargo id {id} exceeds uint32 range')
+		os.exit(1)
+
+	crafting_data[cargo_offset + id] = {
 		'name': item['name'],
 		'tier': item['tier'],
 		'rarity': item['rarity'][0],
 		'icon': item['icon_asset_name'].replace('GeneratedIcons/', ''),
-		'recipes': find_recipes(id),
-		'extraction_skill': find_extraction_skill(id)
+		'recipes': find_recipes(id, True),
+		'extraction_skill': find_extraction_skill(id, True)
 	}
 
 print('Checking icons...')

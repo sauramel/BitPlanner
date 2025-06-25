@@ -39,7 +39,7 @@ public partial class CraftPage : PanelContainer, IPage
         BackButtonCallback = null;
     }
 
-    public void ShowRecipe(int id, uint quantity)
+    public void ShowRecipe(ulong id, uint quantity)
     {
         _overview.Visible = false;
         _recipeView.Visible = true;

@@ -5,6 +5,7 @@ npcs = json.load(open(f'{root}/npc_desc.json'))
 tasks = json.load(open(f'{root}/traveler_task_desc.json'))
 crafting_data = json.load(open('../BitPlanner/crafting_data.json'))
 
+cargo_offset = 0xffffffff
 travelers_data = []
 
 print('Getting NPCs info...')
@@ -38,11 +39,12 @@ for task in tasks:
 
     required_items = {}
     for item in task['required_items']:
-        if str(item[0]) in crafting_data.keys():
-            required_items[item[0]] = item[1]
+        item_id = item[0] + (cargo_offset if item[2][0] == 1 else 0)
+        if str(item_id) in crafting_data.keys():
+            required_items[item_id] = item[1]
         else:
             required_items.clear()
-            print(f'Task {id} requires unavailable item {item[0]}, skipping the task')
+            print(f'Task {id} requires unavailable item {item_id}, skipping the task')
             break
     if len(required_items) == 0:
         continue
