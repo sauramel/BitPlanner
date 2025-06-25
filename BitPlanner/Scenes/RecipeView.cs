@@ -17,7 +17,7 @@ public partial class RecipeView : VBoxContainer
     private Label _skillLabel;
     private OptionButton _recipeSelection;
     private SpinBox _quantitySelection;
-    private Button _baseIngredientsButton;
+    private PopupMenu _actionsMenu;
     private PopupPanel _baseIngredientsPopup;
     private Tree _baseIngredientsTree;
     private Button _baseIngredientsCopyPlain;
@@ -44,11 +44,23 @@ public partial class RecipeView : VBoxContainer
         _quantitySelection = recipeHeader.GetNode<SpinBox>("VBoxContainer2/HBoxContainer2/Quantity");
         _quantitySelection.ValueChanged += OnQuantityChanged;
 
-        _baseIngredientsButton = recipeHeader.GetNode<Button>("VBoxContainer2/HBoxContainer2/BaseIngredientsButton");
+        _actionsMenu = recipeHeader.GetNode<MenuButton>("VBoxContainer2/HBoxContainer2/ActionsMenu").GetPopup();
+        _actionsMenu.IndexPressed += (index) =>
+        {
+            switch (index)
+            {
+                case 0:
+                    OnBaseIngredientsRequested();
+                    break;
+                case 1:
+                    OnCopyTreeRequested();
+                    break;
+            }
+        };
+
         _baseIngredientsPopup = GetNode<PopupPanel>("BaseIngredientsPopup");
         _baseIngredientsPopup.Visible = false;
         _baseIngredientsTree = _baseIngredientsPopup.GetNode<Tree>("VBoxContainer/BaseIngredientsTree");
-        _baseIngredientsButton.Pressed += OnBaseIngredientsRequested;
         _baseIngredientsCopyPlain = _baseIngredientsPopup.GetNode<Button>("VBoxContainer/MarginContainer/HBoxContainer/CopyPlain");
         _baseIngredientsCopyPlain.Pressed += OnBaseIngredientsCopyPlainRequested;
         _baseIngredientsCopyCsv = _baseIngredientsPopup.GetNode<Button>("VBoxContainer/MarginContainer/HBoxContainer/CopyCSV");
@@ -262,6 +274,43 @@ public partial class RecipeView : VBoxContainer
         var id = treeItem.GetMetadata(0).AsUInt64();
         var recipeMeta = treeItem.GetMetadata(1).AsGodotArray();
         BuildTree(id, treeItem, [id], recipeMeta[0].AsUInt32(), (uint)quantity, (uint)quantity);
+    }
+
+    private void OnCopyTreeRequested()
+    {
+        var recipeRoot = _recipeTree.GetRoot();
+        var text = new StringBuilder();
+        text.Append($"**{recipeRoot.GetText(0)} x{recipeRoot.GetText(2)}**\n");
+        text.Append("\n```\n");
+        GetTreeRowText(recipeRoot, [], ref text);
+        text.Append("```");
+        DisplayServer.ClipboardSet(text.ToString());
+    }
+
+    private void GetTreeRowText(TreeItem item, bool[] indents, ref StringBuilder text)
+    {
+        const int maxLength = 52;
+        foreach (var child in item.GetChildren())
+        {
+            var rowString = new StringBuilder();
+            foreach (var indent in indents)
+            {
+                rowString.Append(indent ? "| " : "  ");
+            }
+            rowString.Append(child.GetText(0));
+            while (rowString.Length < maxLength)
+            {
+                rowString.Append(' ');
+            }
+            text.Append(rowString, 0, maxLength);
+            text.Append(' ');
+            text.Append(child.GetText(2));
+            text.Append('\n');
+
+            var nextIndent = child.GetIndex() != item.GetChildCount() - 1;
+            var newIndents = indents.Append(nextIndent).ToArray();
+            GetTreeRowText(child, newIndents, ref text);
+        }
     }
 
     private void OnBaseIngredientsRequested()
