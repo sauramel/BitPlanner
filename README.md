@@ -32,7 +32,7 @@ Statistics calculator with gathering time and effort calculations and other tool
 
 ## Building the application
 
-This application is created using [Godot game engine](https://godotengine.org/) v4.4.1. Take note you must use .NET edition of the engine, the regular edition doesn't support building with C# code. Information about using Godot with C# can be found [in the documentation](https://docs.godotengine.org/en/stable/tutorials/scripting/c_sharp/index.html). C# support in the built-in code editor is limited, look [at this page](https://docs.godotengine.org/en/stable/tutorials/scripting/c_sharp/c_sharp_basics.html#configuring-an-external-editor) to configure Godot to use external editor for code.g
+This application is created using [Godot game engine](https://godotengine.org/) v4.4.1. Take note you must use .NET edition of the engine, the regular edition doesn't support building with C# code. Information about using Godot with C# can be found [in the documentation](https://docs.godotengine.org/en/stable/tutorials/scripting/c_sharp/index.html). C# support in the built-in code editor is limited, look [at this page](https://docs.godotengine.org/en/stable/tutorials/scripting/c_sharp/c_sharp_basics.html#configuring-an-external-editor) to configure Godot to use external editor for code.
 
 ## Navigating the source code
 
