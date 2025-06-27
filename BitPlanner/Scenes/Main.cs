@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Godot;
 
 public partial class Main : Control
@@ -11,9 +12,11 @@ public partial class Main : Control
     private Theme _lightTheme;
     private Theme _darkTheme;
     private Action _backButtonCallback;
+    private Action[] _menuActions;
     private PanelContainer _headerbar;
     private Button _sidebarButton;
     private Button _backButton;
+    private MenuButton _actionsMenuButton;
     private Button _settingsButton;
     private HBoxContainer _windowControlsLeft;
     private HBoxContainer _windowControlsRight;
@@ -139,6 +142,9 @@ public partial class Main : Control
         _backButton = _headerbar.GetNode<Button>("MarginContainer/HBoxContainer/BackButton");
         _backButton.Pressed += () => _backButtonCallback?.Invoke();
 
+        _actionsMenuButton = _headerbar.GetNode<MenuButton>("MarginContainer/HBoxContainer/ActionsMenuButton");
+        _actionsMenuButton.GetPopup().IndexPressed += (index) => _menuActions[index]?.Invoke();
+
         _settingsButton = _headerbar.GetNode<Button>("MarginContainer/HBoxContainer/SettingsButton");
         _settingsPopup = GetNode<PopupPanel>("SettingsPopup");
         _settingsPopup.Visible = false;
@@ -150,6 +156,7 @@ public partial class Main : Control
 
         _craftPage = GetNode<CraftPage>("Content/HBoxContainer/Pages/CraftPage");
         _craftPage.BackButtonCallbackChanged += (_, callback) => SetBackButtonCallback(callback);
+        _craftPage.MenuActionsChanged += (_, actions) => SetMenuActions(actions);
         _craftPage.Visible = false;
 
         _tasksPage = GetNode<TasksPage>("Content/HBoxContainer/Pages/TasksPage");
@@ -385,6 +392,18 @@ public partial class Main : Control
     {
         _backButtonCallback = callback;
         _backButton.Visible = (callback != null);
+    }
+
+    private void SetMenuActions(Dictionary<string, Action> actions)
+    {
+        var menu = _actionsMenuButton.GetPopup();
+        menu.Clear();
+        foreach (var item in actions.Keys)
+        {
+            menu.AddItem(item);
+        }
+        _menuActions = actions.Values.ToArray();
+        _actionsMenuButton.Visible = actions.Count > 0;
     }
 
     private void ActivatePage(IPage page, bool activated)

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-public partial class RecipeView : VBoxContainer
+public partial class RecipeTab : VBoxContainer
 {
     private readonly GameData _data = GameData.Instance;
     private Tree _recipeTree;
@@ -17,11 +17,6 @@ public partial class RecipeView : VBoxContainer
     private Label _skillLabel;
     private OptionButton _recipeSelection;
     private SpinBox _quantitySelection;
-    private PopupMenu _actionsMenu;
-    private PopupPanel _baseIngredientsPopup;
-    private Tree _baseIngredientsTree;
-    private Button _baseIngredientsCopyPlain;
-    private Button _baseIngredientsCopyCsv;
     private Texture2D _errorIcon;
     private PopupPanel _recipeLoopPopup;
     private Label _recipeLoopLabel;
@@ -44,28 +39,6 @@ public partial class RecipeView : VBoxContainer
         _quantitySelection = recipeHeader.GetNode<SpinBox>("VBoxContainer2/HBoxContainer2/Quantity");
         _quantitySelection.ValueChanged += OnQuantityChanged;
 
-        _actionsMenu = recipeHeader.GetNode<MenuButton>("VBoxContainer2/HBoxContainer2/ActionsMenu").GetPopup();
-        _actionsMenu.IndexPressed += (index) =>
-        {
-            switch (index)
-            {
-                case 0:
-                    OnBaseIngredientsRequested();
-                    break;
-                case 1:
-                    OnCopyTreeRequested();
-                    break;
-            }
-        };
-
-        _baseIngredientsPopup = GetNode<PopupPanel>("BaseIngredientsPopup");
-        _baseIngredientsPopup.Visible = false;
-        _baseIngredientsTree = _baseIngredientsPopup.GetNode<Tree>("VBoxContainer/BaseIngredientsTree");
-        _baseIngredientsCopyPlain = _baseIngredientsPopup.GetNode<Button>("VBoxContainer/MarginContainer/HBoxContainer/CopyPlain");
-        _baseIngredientsCopyPlain.Pressed += OnBaseIngredientsCopyPlainRequested;
-        _baseIngredientsCopyCsv = _baseIngredientsPopup.GetNode<Button>("VBoxContainer/MarginContainer/HBoxContainer/CopyCSV");
-        _baseIngredientsCopyCsv.Pressed += OnBaseIngredientsCopyCsvRequested;
-
         _recipeTree = GetNode<Tree>("RecipeTree");
         _recipeTree.SetColumnCustomMinimumWidth(1, 86);
         _recipeTree.SetColumnExpand(1, false);
@@ -84,6 +57,7 @@ public partial class RecipeView : VBoxContainer
     public void ShowRecipe(ulong id, uint quantity = 1)
     {
         var craftingItem = _data.CraftingItems[id];
+        SetName($"T{craftingItem.Tier} {craftingItem.GenericName}");
 
         if (!string.IsNullOrEmpty(craftingItem.Icon))
         {
@@ -114,6 +88,34 @@ public partial class RecipeView : VBoxContainer
         BuildTree(id, rootItem, [id], 0, quantity, quantity);
         _recipeSelection.Select(0);
         _quantitySelection.SetValueNoSignal(quantity);
+    }
+
+    public void SetQuantity(ulong quantity) => _quantitySelection.Value = quantity;
+
+    public string GetTreeAsText()
+    {
+        var recipeRoot = _recipeTree.GetRoot();
+        var text = new StringBuilder();
+        text.Append($"**{recipeRoot.GetText(0)} x{recipeRoot.GetText(2)}**\n");
+        text.Append("\n```\n");
+        GetTreeRowText(recipeRoot, [], ref text);
+        text.Append("```");
+        return text.ToString();
+    }
+
+    public TreeItem GetTreeRoot() => _recipeTree.GetRoot();
+
+    public static string GetQuantityString(uint minQuantity, uint maxQuantity)
+    {
+        if (maxQuantity == minQuantity)
+        {
+            return $"{minQuantity:N0}";
+        }
+        else if (maxQuantity == 0)
+        {
+            return $"≥ {minQuantity:N0}";
+        }
+        return $"{minQuantity:N0}—{maxQuantity:N0}";
     }
 
     private void BuildTree(ulong id, TreeItem treeItem, HashSet<ulong> shownIds, uint recipeIndex, uint minQuantity, uint maxQuantity)
@@ -276,17 +278,6 @@ public partial class RecipeView : VBoxContainer
         BuildTree(id, treeItem, [id], recipeMeta[0].AsUInt32(), (uint)quantity, (uint)quantity);
     }
 
-    private void OnCopyTreeRequested()
-    {
-        var recipeRoot = _recipeTree.GetRoot();
-        var text = new StringBuilder();
-        text.Append($"**{recipeRoot.GetText(0)} x{recipeRoot.GetText(2)}**\n");
-        text.Append("\n```\n");
-        GetTreeRowText(recipeRoot, [], ref text);
-        text.Append("```");
-        DisplayServer.ClipboardSet(text.ToString());
-    }
-
     private void GetTreeRowText(TreeItem item, bool[] indents, ref StringBuilder text)
     {
         const int maxLength = 52;
@@ -311,158 +302,6 @@ public partial class RecipeView : VBoxContainer
             var newIndents = indents.Append(nextIndent).ToArray();
             GetTreeRowText(child, newIndents, ref text);
         }
-    }
-
-    private void OnBaseIngredientsRequested()
-    {
-        var recipeRoot = _recipeTree.GetRoot();
-        var unsortedData = new Dictionary<ulong, int[]>();
-        GetBaseIngredients(recipeRoot, ref unsortedData);
-        var data = unsortedData.OrderBy(pair => _data.CraftingItems[pair.Key].Name);
-
-        _baseIngredientsTree.Clear();
-        var ingredientsRoot = _baseIngredientsTree.CreateItem();
-
-        var skillTreeItems = new Dictionary<int, TreeItem>();
-        foreach (var skill in Skill.All)
-        {
-            var skillTreeItem = _baseIngredientsTree.CreateItem(ingredientsRoot);
-            skillTreeItem.SetText(0, Skill.GetName(skill));
-            skillTreeItem.SetExpandRight(0, true);
-            skillTreeItems.Add(skill, skillTreeItem);
-        }
-        var unknown = _baseIngredientsTree.CreateItem(ingredientsRoot);
-        unknown.SetText(0, Skill.GetName(-1));
-        unknown.SetExpandRight(0, true);
-        skillTreeItems.Add(-1, unknown);
-
-        var dataForCopying = new Godot.Collections.Dictionary<string, Godot.Collections.Array<string>>();
-        foreach (var item in data)
-        {
-            var craftingItem = _data.CraftingItems[item.Key];
-            var skill = -1;
-            if (craftingItem.ExtractionSkill > -1)
-            {
-                skill = craftingItem.ExtractionSkill;
-            }
-            else if (craftingItem.Recipes.Count > 0)
-            {
-                skill = craftingItem.Recipes[0].LevelRequirements[0];
-            }
-            var treeItem = _baseIngredientsTree.CreateItem(skillTreeItems[skill]);
-
-            treeItem.SetText(0, craftingItem.Name);
-            treeItem.SetTooltipText(0, $"{craftingItem.Name} ({Rarity.GetName(craftingItem.Rarity)})");
-            treeItem.SetCustomColor(0, Rarity.GetColor(craftingItem.Rarity));
-            if (!string.IsNullOrEmpty(craftingItem.Icon))
-            {
-                var resourcePath = $"res://Assets/{craftingItem.Icon}.png";
-                if (ResourceLoader.Exists(resourcePath))
-                {
-                    treeItem.SetIcon(0, GD.Load<Texture2D>(resourcePath));
-                }
-            }
-
-            treeItem.SetTextAlignment(1, HorizontalAlignment.Right);
-            var minQuantity = (uint)item.Value[0];
-            // Here maxQuantity can be -1, see GetBaseIngredients()
-            var maxQuantity = item.Value[1] < 0 ? 0u : (uint)item.Value[1];
-            var quantityString = GetQuantityString(minQuantity, maxQuantity);
-            treeItem.SetText(1, quantityString);
-
-            dataForCopying.Add(craftingItem.Name, [Skill.GetName(skill), quantityString]);
-        }
-        foreach (var skillTreeItem in skillTreeItems.Values)
-        {
-            if (skillTreeItem.GetChildCount() == 0)
-            {
-                skillTreeItem.Visible = false;
-            }
-        }
-        ingredientsRoot.SetMetadata(0, dataForCopying);
-        _baseIngredientsPopup.PopupCentered();
-    }
-
-    private void GetBaseIngredients(TreeItem item, ref Dictionary<ulong, int[]> data)
-    {
-        var guaranteedCraft = true;
-        if (Config.TreatNonGuaranteedItemsAsBase)
-        {
-            foreach (var child in item.GetChildren())
-            {
-                var childQuantity = child.GetMetadata(2).AsInt32Array();
-                if (childQuantity[1] == 0)
-                {
-                    guaranteedCraft = false;
-                    break;
-                }
-            }
-        }
-        if (item.GetChildCount() > 0 && guaranteedCraft)
-        {
-            foreach (var child in item.GetChildren())
-            {
-                GetBaseIngredients(child, ref data);
-            }
-            return;
-        }
-
-        var id = item.GetMetadata(0).AsUInt64();
-        var quantity = item.GetMetadata(2).AsInt32Array();
-        var minQuantity = quantity[0];
-        var maxQuantity = quantity[1];
-        if (!data.ContainsKey(id))
-        {
-            data[id] = [0, 0];
-        }
-        if (maxQuantity > 0)
-        {
-            data[id][0] += minQuantity;
-            if (data[id][1] >= 0)
-            {
-                data[id][1] += maxQuantity;
-            }
-        }
-        else
-        {
-            if (minQuantity > data[id][0])
-            {
-                data[id][0] = minQuantity;
-            }
-            // For the sake of code simplification, here -1 means unknown maximum quantity, unlike in BuildTree() and quantity metadata where it's 0
-            data[id][1] = -1;
-        }
-    }
-
-    private void OnBaseIngredientsCopyPlainRequested()
-    {
-        var unsortedData = _baseIngredientsTree.GetRoot().GetMetadata(0).AsGodotDictionary<string, Godot.Collections.Array<string>>();
-        var data = unsortedData.OrderBy(pair => pair.Value[0]);
-        var text = new StringBuilder();
-        var skill = "";
-        foreach (var item in data)
-        {
-            if (skill != item.Value[0])
-            {
-                skill = item.Value[0];
-                text.Append($"\n{skill}\n");
-            }
-            text.Append($"{item.Key}: {item.Value[1]}\n");
-        }
-        DisplayServer.ClipboardSet(text.ToString().Trim());
-    }
-
-    private void OnBaseIngredientsCopyCsvRequested()
-    {
-        var unsortedData = _baseIngredientsTree.GetRoot().GetMetadata(0).AsGodotDictionary<string, Godot.Collections.Array<string>>();
-        var data = unsortedData.OrderBy(pair => pair.Value[0]);
-        var text = new StringBuilder();
-        text.Append("Item Name,Profession/Skill,Quantity\n");
-        foreach (var item in data)
-        {
-            text.Append($"{item.Key},{item.Value[0]},{item.Value[1]}\n");
-        }
-        DisplayServer.ClipboardSet(text.ToString());
     }
 
     private void OnTreeItemEdited()
@@ -491,19 +330,6 @@ public partial class RecipeView : VBoxContainer
     {
         _recipeLoopPopup.PopupCentered();
         _recipeLoopLabel.Text = $"Selected recipe for {item.GetText(0)} requires items that are already present on this branch of the crafting tree, creating an infinite loop.";
-    }
-
-    private static string GetQuantityString(uint minQuantity, uint maxQuantity)
-    {
-        if (maxQuantity == minQuantity)
-        {
-            return $"{minQuantity:N0}";
-        }
-        else if (maxQuantity == 0)
-        {
-            return $"≥ {minQuantity:N0}";
-        }
-        return $"{minQuantity:N0}—{maxQuantity:N0}";
     }
 
     private void OnThemeChanged()

@@ -1,13 +1,14 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 
 public partial class TasksPage : PanelContainer, IPage
 {
-
     private readonly GameData _data = GameData.Instance;
     private PackedScene _travelerScene;
     private TabContainer _travelers;
-    public Action BackButtonCallback { get => null; }
+    public Action BackButtonCallback => null;
+    public Dictionary<string, Action> MenuActions => [];
 
     public event EventHandler<Traveler.CraftRequestedEventArgs> CraftRequested;
 

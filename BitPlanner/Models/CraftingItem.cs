@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 public class CraftingItem
@@ -9,4 +10,5 @@ public class CraftingItem
     public List<Recipe> Recipes { get; set; } = [];
     public int ExtractionSkill { get; set; } = -1;
     public bool Craftable => Recipes.Count > 0;
+    public string GenericName => Name.Substring(Math.Max(0, Name.IndexOf(' ') + 1));
 }

@@ -1,10 +1,12 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 
 public partial class AboutPage : PanelContainer, IPage
 {
-    public Action BackButtonCallback { get => null; }
+    public Action BackButtonCallback => null;
+    public Dictionary<string, Action> MenuActions => [];
 
     public override void _Ready()
     {

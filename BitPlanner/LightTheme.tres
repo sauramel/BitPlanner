@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=46 format=3 uid="uid://bmgbuiwoaosw3"]
+[gd_resource type="Theme" load_steps=49 format=3 uid="uid://bmgbuiwoaosw3"]
 
 [ext_resource type="Texture2D" uid="uid://bmspgkdsvmr3i" path="res://Assets/BinaryCheck.png" id="1_d3xey"]
 [ext_resource type="Texture2D" uid="uid://cnk856ymh7n07" path="res://Assets/RadioOn.png" id="1_qr6k6"]
@@ -6,7 +6,9 @@
 [ext_resource type="Texture2D" uid="uid://icbmaltp6r1r" path="res://Assets/BinaryX.png" id="2_vnsy5"]
 [ext_resource type="Texture2D" uid="uid://clknnhh83ymqt" path="res://Assets/ArrowDownLight.png" id="3_vnsy5"]
 [ext_resource type="Texture2D" uid="uid://c6twk4tqqx0v5" path="res://Assets/ArrowLeftLight.png" id="6_pa7ic"]
+[ext_resource type="Texture2D" uid="uid://dt6ww03utm31j" path="res://Assets/CloseTabLight.png" id="6_q3tic"]
 [ext_resource type="Texture2D" uid="uid://b4c6e8bmxtgjk" path="res://Assets/ArrowRightLight.png" id="7_q3tic"]
+[ext_resource type="Texture2D" uid="uid://cyl8pcxupu84l" path="res://Assets/DelimiterLight.png" id="8_q3tic"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qr6k6"]
 content_margin_left = 10.0
@@ -211,6 +213,8 @@ corner_radius_bottom_left = 4
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_akwyg"]
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_q3tic"]
+
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_qr6k6"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yt1pq"]
@@ -381,7 +385,9 @@ Panel/styles/panel = SubResource("StyleBoxFlat_iq4a7")
 PanelContainer/styles/panel = SubResource("StyleBoxFlat_akwyg")
 PopupMenu/colors/font_color = Color(0.0823529, 0.337255, 0.494118, 1)
 PopupMenu/colors/font_hover_color = Color(0.0823529, 0.337255, 0.494118, 1)
-PopupMenu/constants/v_separation = 16
+PopupMenu/constants/item_end_padding = 6
+PopupMenu/constants/item_start_padding = 6
+PopupMenu/constants/v_separation = 24
 PopupMenu/icons/radio_checked = ExtResource("1_qr6k6")
 PopupMenu/icons/radio_unchecked = ExtResource("2_mxdax")
 PopupMenu/styles/hover = SubResource("StyleBoxFlat_qmd87")
@@ -398,11 +404,19 @@ SpinBox/styles/up_background = SubResource("StyleBoxFlat_8ft0u")
 SpinBox/styles/up_background_disabled = SubResource("StyleBoxEmpty_akwyg")
 SpinBox/styles/up_background_hovered = SubResource("StyleBoxFlat_8ft0u")
 SpinBox/styles/up_background_pressed = SubResource("StyleBoxFlat_8ft0u")
+TabBar/icons/close = ExtResource("6_q3tic")
+TabBar/icons/decrement = ExtResource("6_pa7ic")
+TabBar/icons/decrement_highlight = ExtResource("6_pa7ic")
+TabBar/icons/drop_mark = ExtResource("8_q3tic")
+TabBar/icons/increment = ExtResource("7_q3tic")
+TabBar/icons/increment_highlight = ExtResource("7_q3tic")
+TabBar/styles/button_highlight = SubResource("StyleBoxEmpty_q3tic")
 TabContainer/colors/font_hovered_color = Color(0.0823529, 0.337255, 0.494118, 1)
 TabContainer/colors/font_selected_color = Color(0.0823529, 0.337255, 0.494118, 1)
 TabContainer/colors/font_unselected_color = Color(0.0823529, 0.337255, 0.494118, 1)
 TabContainer/icons/decrement = ExtResource("6_pa7ic")
 TabContainer/icons/decrement_highlight = ExtResource("6_pa7ic")
+TabContainer/icons/drop_mark = ExtResource("8_q3tic")
 TabContainer/icons/increment = ExtResource("7_q3tic")
 TabContainer/icons/increment_highlight = ExtResource("7_q3tic")
 TabContainer/styles/panel = SubResource("StyleBoxEmpty_qr6k6")

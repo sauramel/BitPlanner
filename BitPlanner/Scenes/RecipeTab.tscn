@@ -1,20 +1,20 @@
 [gd_scene load_steps=4 format=3 uid="uid://dl0mam2fwl0jy"]
 
-[ext_resource type="Script" uid="uid://bp4kcibt3wohl" path="res://Scenes/RecipeView.cs" id="1_hl37r"]
-[ext_resource type="Texture2D" uid="uid://2nayjyn7kypn" path="res://Assets/IconsAtlas.png" id="1_lyjdx"]
+[ext_resource type="Script" uid="uid://bp4kcibt3wohl" path="res://Scenes/RecipeTab.cs" id="1_tcrk3"]
+[ext_resource type="Texture2D" uid="uid://2nayjyn7kypn" path="res://Assets/IconsAtlas.png" id="2_h7cu5"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_spqpi"]
-atlas = ExtResource("1_lyjdx")
+atlas = ExtResource("2_h7cu5")
 region = Rect2(68, 119, 18, 20)
 
-[node name="RecipeView" type="VBoxContainer"]
+[node name="RecipeTab" type="VBoxContainer"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 0
-script = ExtResource("1_hl37r")
+script = ExtResource("1_tcrk3")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 2
@@ -94,76 +94,11 @@ max_value = 1000.0
 value = 1.0
 rounded = true
 
-[node name="ActionsMenu" type="MenuButton" parent="MarginContainer/Header/VBoxContainer2/HBoxContainer2"]
-layout_mode = 2
-text = "Actions"
-flat = false
-item_count = 2
-popup/item_0/text = "Show Base Ingredients"
-popup/item_0/id = 0
-popup/item_1/text = "Copy Tree As Text"
-popup/item_1/id = 1
-
 [node name="RecipeTree" type="Tree" parent="."]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 columns = 3
-hide_root = true
-select_mode = 1
-auto_tooltip = false
-
-[node name="BaseIngredientsPopup" type="PopupPanel" parent="."]
-auto_translate_mode = 1
-title = "Base Ingredients"
-initial_position = 2
-size = Vector2i(450, 320)
-visible = true
-min_size = Vector2i(450, 320)
-
-[node name="VBoxContainer" type="VBoxContainer" parent="BaseIngredientsPopup"]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 4.0
-offset_top = 4.0
-offset_right = -4.0
-offset_bottom = -8.0
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-theme_override_constants/separation = 0
-
-[node name="MarginContainer" type="MarginContainer" parent="BaseIngredientsPopup/VBoxContainer"]
-layout_mode = 2
-theme_override_constants/margin_left = 4
-theme_override_constants/margin_top = 4
-theme_override_constants/margin_right = 4
-theme_override_constants/margin_bottom = 4
-
-[node name="HBoxContainer" type="HBoxContainer" parent="BaseIngredientsPopup/VBoxContainer/MarginContainer"]
-layout_mode = 2
-size_flags_horizontal = 4
-
-[node name="Label" type="Label" parent="BaseIngredientsPopup/VBoxContainer/MarginContainer/HBoxContainer"]
-layout_mode = 2
-text = "Copy"
-
-[node name="CopyPlain" type="Button" parent="BaseIngredientsPopup/VBoxContainer/MarginContainer/HBoxContainer"]
-layout_mode = 2
-text = "Plain Text"
-
-[node name="CopyCSV" type="Button" parent="BaseIngredientsPopup/VBoxContainer/MarginContainer/HBoxContainer"]
-layout_mode = 2
-text = "CSV"
-
-[node name="BaseIngredientsTree" type="Tree" parent="BaseIngredientsPopup/VBoxContainer"]
-layout_mode = 2
-size_flags_vertical = 3
-columns = 2
-hide_folding = true
-enable_recursive_folding = false
 hide_root = true
 select_mode = 1
 auto_tooltip = false
