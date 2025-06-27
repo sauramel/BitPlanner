@@ -3,7 +3,7 @@ import json
 root = 'BitCraft_GameData/server/region'
 npcs = json.load(open(f'{root}/npc_desc.json'))
 tasks = json.load(open(f'{root}/traveler_task_desc.json'))
-crafting_data = json.load(open('../BitPlanner/crafting_data.json'))
+crafting_data = json.load(open('../crafting_data.json'))
 
 cargo_offset = 0xffffffff
 travelers_data = []
@@ -68,4 +68,4 @@ for task in tasks:
 for traveler in travelers_data:
     traveler['tasks'].sort(key=lambda task: task['levels'][0])
 
-json.dump(travelers_data, open('../BitPlanner/travelers_data.json', 'w'), indent=2)
+json.dump(travelers_data, open('../travelers_data.json', 'w'), indent=2)
