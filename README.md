@@ -48,3 +48,5 @@ This application is created using [Godot game engine](https://godotengine.org/) 
 Run `create_crafting_db.py` to convert `crafting_data.json` into a SQLite database.
 
 The script creates `crafting_data.db` by default and stores item information and all recipe details for offline use.
+
+Use `query_crafting_db.py <item name>` to print a dependency tree for an item from the generated database.

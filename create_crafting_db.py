@@ -5,12 +5,15 @@ from pathlib import Path
 
 
 def build_database(json_path: Path, db_path: Path) -> None:
-    data = json.loads(Path(json_path).read_text())
+    data = json.loads(json_path.read_text())
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
 
-    cur.execute(
+    cur.executescript(
         """
+        PRAGMA journal_mode = WAL;
+        PRAGMA synchronous = NORMAL;
+
         CREATE TABLE IF NOT EXISTS items (
             id INTEGER PRIMARY KEY,
             name TEXT,
@@ -18,43 +21,35 @@ def build_database(json_path: Path, db_path: Path) -> None:
             rarity INTEGER,
             icon TEXT,
             extraction_skill INTEGER
-        )
-        """
-    )
-    cur.execute(
-        """
+        );
+
         CREATE TABLE IF NOT EXISTS recipes (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             item_id INTEGER,
             output_quantity INTEGER,
             level_requirement INTEGER,
             FOREIGN KEY(item_id) REFERENCES items(id)
-        )
-        """
-    )
-    cur.execute(
-        """
+        );
+
         CREATE TABLE IF NOT EXISTS recipe_ingredients (
             recipe_id INTEGER,
             ingredient_id INTEGER,
             quantity INTEGER,
             FOREIGN KEY(recipe_id) REFERENCES recipes(id),
             FOREIGN KEY(ingredient_id) REFERENCES items(id)
-        )
-        """
-    )
-    cur.execute(
-        """
+        );
+
         CREATE TABLE IF NOT EXISTS recipe_possibilities (
             recipe_id INTEGER,
             quantity INTEGER,
             chance REAL,
             FOREIGN KEY(recipe_id) REFERENCES recipes(id)
-        )
+        );
         """
     )
     conn.commit()
 
+    cur.execute("BEGIN")
     for item_id_str, item in data.items():
         item_id = int(item_id_str)
         cur.execute(
@@ -87,6 +82,15 @@ def build_database(json_path: Path, db_path: Path) -> None:
                     "INSERT INTO recipe_possibilities (recipe_id, quantity, chance) VALUES (?, ?, ?)",
                     (recipe_id, int(qty), chance),
                 )
+    conn.commit()
+
+    cur.executescript(
+        """
+        CREATE INDEX IF NOT EXISTS idx_items_name ON items(name);
+        CREATE INDEX IF NOT EXISTS idx_recipes_item ON recipes(item_id);
+        CREATE INDEX IF NOT EXISTS idx_ingredients_ing ON recipe_ingredients(ingredient_id);
+        """
+    )
     conn.commit()
     conn.close()
 
