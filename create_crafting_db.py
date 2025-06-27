@@ -93,7 +93,7 @@ def build_database(json_path: Path, db_path: Path) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Convert crafting_data.json to SQLite database")
-    parser.add_argument("json_path", nargs="?", default="BitPlanner/crafting_data.json", help="Path to crafting_data.json")
+    parser.add_argument("json_path", nargs="?", default="crafting_data.json", help="Path to crafting_data.json")
     parser.add_argument("db_path", nargs="?", default="crafting_data.db", help="Output SQLite database path")
     args = parser.parse_args()
 

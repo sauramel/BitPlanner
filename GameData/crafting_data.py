@@ -106,19 +106,7 @@ for item in cargos:
 		'extraction_skill': find_extraction_skill(id, True)
 	}
 
-print('Checking icons...')
-missing_icons = []
-for item in crafting_data.values():
-	icon = item['icon']
-	if not os.path.exists(f'../BitPlanner/Assets/{icon}.png'):
-		if os.path.exists(f'../BitPlanner/Assets/{icon.replace('Other/', '')}.png'):
-			item['icon'] = icon.replace('Other/', '')
-		else:
-			missing_icons.append(icon)
-if len(missing_icons) > 0:
-	print('Missing icons:')
-	for icon in sorted(set(missing_icons)):
-		print('  ' + icon)
+
 
 print('Reorganizing recipes...')
 for item in items:
@@ -171,4 +159,4 @@ for item in crafting_data.values():
 	recipes.sort(key=lambda recipe: recipe['consumed_items'][0]['quantity'])
 	item['recipes'] = recipes
 
-json.dump(crafting_data, open('../BitPlanner/crafting_data.json', 'w'), indent=2)
+json.dump(crafting_data, open('../crafting_data.json', 'w'), indent=2)
